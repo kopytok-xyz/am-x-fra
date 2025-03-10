@@ -10,6 +10,15 @@ export const tagsCards = () => {
 
         if (imageWrapper) {
           imageWrapper.classList.toggle('hide');
+          if (!imageWrapper.classList.contains('hide')) {
+            imageWrapper.style.opacity = '0';
+            setTimeout(() => {
+              imageWrapper.style.transition = 'opacity 1s ease';
+              imageWrapper.style.opacity = '1';
+            }, 0);
+          } else {
+            imageWrapper.style.opacity = '0';
+          }
         }
         if (featuresListWrapper) {
           featuresListWrapper.classList.toggle('hide');
