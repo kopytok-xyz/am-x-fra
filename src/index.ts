@@ -1,7 +1,8 @@
-import { greetUser } from '$utils/greet';
+import { symbolToElement } from '$utils/symbol-to-element';
+import { tagsCards } from '$utils/tags-cards';
 
 window.Webflow ||= [];
 window.Webflow.push(() => {
-  const name = 'John Doe';
-  greetUser(name);
+  symbolToElement();
+  tagsCards();
 });
