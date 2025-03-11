@@ -1,8 +1,9 @@
 export const func_menu = () => {
   const menuInner = document.querySelector('.menu_inner');
   const scrollTrigger = document.querySelector('.menu_scroll-trigger');
+  const sectionMenu = document.querySelector('.section_menu');
 
-  if (menuInner && scrollTrigger) {
+  if (menuInner && scrollTrigger && sectionMenu) {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         const observer = new IntersectionObserver((entries) => {
@@ -17,7 +18,17 @@ export const func_menu = () => {
 
         observer.observe(scrollTrigger);
       } else {
-        menuInner.classList.remove('is-smaller');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              sectionMenu.classList.add('is-visible');
+            } else {
+              sectionMenu.classList.remove('is-visible');
+            }
+          });
+        });
+
+        observer.observe(scrollTrigger);
       }
     };
 
