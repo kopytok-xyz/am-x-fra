@@ -10,18 +10,14 @@ export const func_form = () => {
       const breakpointTop768 = parseFloat(parent.getAttribute('breakpoint-top-768')) || 0;
 
       const calculateDistanceInRem = () => {
-        const triggerTop = trigger.getBoundingClientRect().top;
+        const rect = trigger.getBoundingClientRect();
         const remSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
-        const distanceInRem = triggerTop / remSize;
+        const distanceTopInRem = rect.top / remSize;
+        const distanceBottomInRem = (window.innerHeight - rect.bottom) / remSize;
 
-        const currentBreakpoint = window.innerWidth < 768 ? '0' : '768';
         const threshold = window.innerWidth < 768 ? breakpointTop0 : breakpointTop768;
 
-        const conditionMet = distanceInRem <= threshold;
-
-        console.log(`Trigger top in rem: ${distanceInRem}rem`);
-        console.log(`Current breakpoint: ${currentBreakpoint}`);
-        console.log(`Condition met (<= ${threshold}rem): ${conditionMet}`);
+        const conditionMet = distanceTopInRem <= threshold && distanceBottomInRem <= threshold;
 
         if (conditionMet) {
           parent.classList.add('is-top');
@@ -30,7 +26,7 @@ export const func_form = () => {
         }
       };
 
-      // Initial calculation and log
+      // Initial calculation
       calculateDistanceInRem();
 
       // Add event listeners to recalculate on scroll and resize
