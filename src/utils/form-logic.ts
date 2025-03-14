@@ -167,6 +167,12 @@ document.addEventListener('DOMContentLoaded', () => {
           stepHistory.pop(); // Удаляем последний шаг из истории
           updateStepHistoryInput();
           console.log(`История шагов: ${stepHistory.join('-->')}`);
+        } else {
+          const startScreen = document.querySelector('[screen-name="start"]') as HTMLElement;
+          if (currentScreen && startScreen) {
+            switchScreen(currentScreen, startScreen);
+            console.log('Возвращаемся на стартовый экран.');
+          }
         }
       }
     });
@@ -284,6 +290,11 @@ document.addEventListener('DOMContentLoaded', () => {
           startScreen.classList.remove('hide');
           updateFormNavTip();
           formPopup.style.opacity = '1';
+          startScreen.style.opacity = '1';
+          // Удаляем класс hide для всех экранов
+          document.querySelectorAll('.section_step').forEach((screen) => {
+            (screen as HTMLElement).classList.remove('hide');
+          });
         }
       }
     });
