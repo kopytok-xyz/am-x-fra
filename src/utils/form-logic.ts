@@ -53,10 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // Обновляем текст подсказки в навигации формы
       updateFormNavTip();
 
-      console.log(
-        `Переключение с экрана ${currentScreen.getAttribute('screen-name')} на экран ${nextScreen.getAttribute('screen-name')}`
-      );
-
       // Обновляем видимость кнопки "Back"
       updateBackButtonVisibility();
     }, 300);
@@ -109,10 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Переключаем экраны
             switchScreen(currentScreen, nextScreen);
-          } else {
-            console.log(
-              `Не удалось найти экраны для переключения. Текущий: ${currentScreen ? currentScreen.getAttribute('screen-name') : 'не найден'}, следующий: ${nextScreenName}`
-            );
           }
         }
       }
@@ -166,12 +158,10 @@ document.addEventListener('DOMContentLoaded', () => {
           switchScreen(currentScreen, prevScreen);
           stepHistory.pop(); // Удаляем последний шаг из истории
           updateStepHistoryInput();
-          console.log(`История шагов: ${stepHistory.join('-->')}`);
         } else {
           const startScreen = document.querySelector('[screen-name="start"]') as HTMLElement;
           if (currentScreen && startScreen) {
             switchScreen(currentScreen, startScreen);
-            console.log('Возвращаемся на стартовый экран.');
           }
         }
       }
@@ -213,11 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (backButton && currentScreen) {
       const isStartScreen = currentScreen.getAttribute('screen-name') === 'start';
       backButton.classList.toggle('hide-opacity', isStartScreen);
-
-      // Добавляем лог для отладки
-      console.log(
-        `Текущий экран: ${currentScreen.getAttribute('screen-name')}, кнопка Back ${isStartScreen ? 'скрыта' : 'видима'}`
-      );
     }
   }
 
@@ -227,21 +212,62 @@ document.addEventListener('DOMContentLoaded', () => {
   // Инициализируем текст подсказки при загрузке страницы
   updateFormNavTip();
 
+  // Функция для логирования всех инпутов формы
+  function logAllFormInputs() {
+    const formElement = document.querySelector('form');
+    if (!formElement) return;
+
+    console.log('--- Текущие значения всех инпутов формы ---');
+    const formData = new FormData(formElement);
+    const inputValues: Record<string, string> = {};
+
+    formData.forEach((value, key) => {
+      inputValues[key] = value.toString();
+    });
+
+    console.table(inputValues); // Выводим в виде таблицы для лучшей читаемости
+    console.log('--- Конец списка значений инпутов ---');
+  }
+
   // Функция для обновления скрытого инпута с историей шагов
   function updateStepHistoryInput() {
     const stepHistoryInput = document.querySelector('[name="step-history"]') as HTMLInputElement;
     if (stepHistoryInput) {
       stepHistoryInput.value = stepHistory.join('-->');
+
+      // Логируем значения инпутов после обновления истории шагов
+      logAllFormInputs();
     }
   }
 
   // Добавляем скрытый инпут для истории шагов
   const formElement = document.querySelector('form');
+
   if (formElement) {
     const stepHistoryInput = document.createElement('input');
     stepHistoryInput.type = 'hidden';
     stepHistoryInput.name = 'step-history';
     formElement.appendChild(stepHistoryInput);
+    console.log('Создан скрытый инпут для истории шагов: name="step-history"');
+
+    // Отслеживаем изменения в любом инпуте формы
+    formElement.addEventListener('input', () => {
+      logAllFormInputs();
+    });
+
+    // Отслеживаем изменения в радио-кнопках и чекбоксах
+    formElement.addEventListener('change', (event) => {
+      const target = event.target as HTMLElement;
+      if (
+        target.tagName === 'INPUT' &&
+        (target.getAttribute('type') === 'radio' || target.getAttribute('type') === 'checkbox')
+      ) {
+        logAllFormInputs();
+      }
+    });
+
+    // Логируем начальные значения
+    setTimeout(logAllFormInputs, 500); // Небольшая задержка для инициализации формы
   }
 
   // Обработчик для кликов по элементам с атрибутом [story-point]
@@ -253,26 +279,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!stepHistory.includes(pointName)) {
           stepHistory.push(pointName);
           updateStepHistoryInput();
-          console.log(`История шагов: ${stepHistory.join('-->')}`);
         }
-        console.log(`Клик на story-point: ${pointName}`);
       }
     });
   });
 
-  // Лог при запуске формы с первого экрана
-  console.log(`История шагов: ${stepHistory.join('-->')}`);
-
-  // Удаляем запрет на отправку формы и оставляем только логи по истории шагов
+  // Удаляем запрет на отправку формы и добавляем логи по содержимому инпутов перед отправкой
   if (formElement) {
     formElement.addEventListener('submit', () => {
-      // Удаляем запрет на отправку формы
-      // event.preventDefault();
-      // Удаляем вывод данных каждого поля в консоль
-      // const formData = new FormData(formElement);
-      // formData.forEach((value, key) => {
-      //   console.log(`${key}: ${value}`);
-      // });
+      // Логируем содержимое всех инпутов перед отправкой
+      console.log('--- Содержимое инпутов перед отправкой формы ---');
+      const formData = new FormData(formElement);
+      formData.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+      });
+      console.log('--- Конец содержимого инпутов ---');
     });
   }
 
@@ -282,12 +303,10 @@ document.addEventListener('DOMContentLoaded', () => {
     trigger.addEventListener('click', (event) => {
       event.preventDefault();
       const screenName = trigger.getAttribute('open-form-trigger');
-      console.log(`Клик на open-form-trigger: ${screenName}`);
       if (screenName) {
         const formPopup = document.querySelector('[form-popup]') as HTMLElement;
         let startScreen = document.querySelector(`[screen-name="${screenName}"]`) as HTMLElement;
         if (!startScreen) {
-          console.log(`Экран с именем ${screenName} не найден, открываем экран start.`);
           startScreen = document.querySelector('[screen-name="start"]') as HTMLElement;
         }
         if (formPopup && startScreen) {
@@ -305,7 +324,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Если открываемый экран не "start", добавляем "start" в историю переходов
           if (screenName !== 'start') {
-            console.log('Добавляем "start" в историю переходов для корректной работы кнопки Back');
             screenHistory.push('start');
 
             // Также добавляем в историю шагов, если нужно
@@ -317,7 +335,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Обновляем видимость кнопки Back после открытия формы
           updateBackButtonVisibility();
-          console.log(`Обновлена видимость кнопки Back при открытии экрана ${screenName}`);
         }
       }
     });
