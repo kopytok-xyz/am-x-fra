@@ -21,7 +21,33 @@ export const func_formLogic = () => {
   }
 };
 
+// Функция для перенаправления клика с fake-кнопок на real-кнопки
+function setupFakeButtonRedirection() {
+  const fakeButtons = document.querySelectorAll('[form-button-fake]');
+  const realButton = document.querySelector('[form-button-real]');
+
+  if (fakeButtons.length && realButton) {
+    fakeButtons.forEach((fakeButton) => {
+      fakeButton.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        // Программно вызываем клик на реальной кнопке
+        (realButton as HTMLElement).click();
+
+        console.log('Клик перенаправлен с fake-кнопки на real-кнопку');
+      });
+    });
+
+    console.log(
+      `Настроено перенаправление кликов с ${fakeButtons.length} fake-кнопок на real-кнопку`
+    );
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  // Настраиваем перенаправление кликов с fake-кнопок на real-кнопки
+  setupFakeButtonRedirection();
+
   // Массив для хранения истории переходов между экранами
   const screenHistory: string[] = [];
 
@@ -100,6 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Обновляем видимость кнопки "Back"
       updateBackButtonVisibility();
+
+      // Обновляем видимость нижней навигации
+      updateBottomNavVisibility();
     }, 300);
   }
 
@@ -251,8 +280,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Функция для обновления видимости нижней навигации
+  function updateBottomNavVisibility() {
+    const bottomNav = document.querySelector('.section_step.is-form-nav-bot') as HTMLElement;
+    const currentScreen = document.querySelector('.section_step:not(.hide)') as HTMLElement;
+
+    if (bottomNav && currentScreen) {
+      const isChoosePartnerScreen = currentScreen.getAttribute('screen-name') === 'choose-partner';
+
+      // Показываем нижнюю навигацию только на экране choose-partner
+      if (isChoosePartnerScreen) {
+        bottomNav.classList.remove('hide');
+      } else {
+        bottomNav.classList.add('hide');
+      }
+
+      console.log(
+        `Нижняя навигация ${isChoosePartnerScreen ? 'показана' : 'скрыта'} на экране ${currentScreen.getAttribute('screen-name')}`
+      );
+    }
+  }
+
   // Обновляем видимость кнопки "Back" при загрузке страницы
   updateBackButtonVisibility();
+
+  // Обновляем видимость нижней навигации при загрузке страницы
+  updateBottomNavVisibility();
 
   // Инициализируем текст подсказки при загрузке страницы
   updateFormNavTip();
@@ -418,6 +471,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Обновляем видимость кнопки Back после открытия формы
           updateBackButtonVisibility();
+
+          // Обновляем видимость нижней навигации
+          updateBottomNavVisibility();
         }
       }
     });
