@@ -44,9 +44,59 @@ function setupFakeButtonRedirection() {
   }
 }
 
+// Функция для обработки кликов по элементам с атрибутом radio-trigger-redirect
+function setupRadioTriggerRedirection() {
+  const radioTriggers = document.querySelectorAll('[radio-trigger-redirect]');
+
+  if (radioTriggers.length) {
+    radioTriggers.forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        // Получаем значение атрибута radio-trigger-redirect
+        const targetValue = trigger.getAttribute('radio-trigger-redirect');
+
+        if (targetValue) {
+          // Ищем радио-кнопку в форме с таким же значением value
+          const formPopup = document.querySelector('[form-popup]');
+          if (formPopup) {
+            const targetRadio = formPopup.querySelector(
+              `input[type="radio"][value="${targetValue}"]`
+            ) as HTMLInputElement;
+
+            if (targetRadio) {
+              // Программно вызываем клик на найденной радио-кнопке
+              targetRadio.click();
+              console.log(`Клик перенаправлен на радио-кнопку с value="${targetValue}"`);
+
+              // Если радио-кнопка находится внутри карточки с атрибутом card-checkbox-view,
+              // нужно также активировать карточку
+              const parentCard = targetRadio.closest('[card-checkbox-view]');
+              if (parentCard) {
+                parentCard.classList.add('is-checked');
+              }
+            } else {
+              console.log(`Не найдена радио-кнопка с value="${targetValue}" в форме`);
+            }
+          } else {
+            console.log('Не найдена форма [form-popup] на странице');
+          }
+        }
+      });
+    });
+
+    console.log(
+      `Настроено перенаправление кликов с ${radioTriggers.length} элементов с атрибутом radio-trigger-redirect`
+    );
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Настраиваем перенаправление кликов с fake-кнопок на real-кнопки
   setupFakeButtonRedirection();
+
+  // Настраиваем перенаправление кликов с элементов radio-trigger-redirect на радио-кнопки
+  setupRadioTriggerRedirection();
 
   // Массив для хранения истории переходов между экранами
   const screenHistory: string[] = [];
