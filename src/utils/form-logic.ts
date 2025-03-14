@@ -28,6 +28,51 @@ document.addEventListener('DOMContentLoaded', () => {
   // Массив для хранения истории шагов
   const stepHistory: string[] = [];
 
+  // Функция для замены значений value у элементов с атрибутом need-top-replace-with-js
+  function replaceValuesFromParentAttributes() {
+    // Находим все радио-кнопки и чекбоксы
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    // Объединяем коллекции в один массив
+    const allInputs = [...radioButtons, ...checkboxes];
+
+    allInputs.forEach((input) => {
+      const inputElement = input as HTMLInputElement;
+
+      // Проверяем, пустое ли значение value
+      if (!inputElement.value || inputElement.value === 'need-top-replace-with-js') {
+        // Ищем ближайшего родителя с атрибутом need-top-replace-with-js-src
+        let parent = inputElement.parentElement;
+        let sourceValue = null;
+
+        // Поднимаемся вверх по DOM-дереву, пока не найдем родителя с нужным атрибутом
+        while (parent && !sourceValue) {
+          sourceValue = parent.getAttribute('need-top-replace-with-js-src');
+          if (!sourceValue) {
+            parent = parent.parentElement;
+          }
+        }
+
+        // Если нашли значение, устанавливаем его в value элемента
+        if (sourceValue) {
+          inputElement.value = sourceValue;
+          console.log(
+            `Заменено пустое значение value для элемента с id="${inputElement.id}" на "${sourceValue}" из родительского атрибута`
+          );
+        } else {
+          console.log(
+            `Не найден родитель с атрибутом need-top-replace-with-js-src для элемента:`,
+            inputElement
+          );
+        }
+      }
+    });
+  }
+
+  // Вызываем функцию замены значений после загрузки DOM
+  setTimeout(replaceValuesFromParentAttributes, 100);
+
   // Функция для перехода между экранами с анимацией
   function switchScreen(currentScreen: HTMLElement, nextScreen: HTMLElement) {
     // Плавно скрываем текущий экран
