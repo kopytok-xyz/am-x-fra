@@ -264,4 +264,28 @@ document.addEventListener('DOMContentLoaded', () => {
       // });
     });
   }
+
+  // Обработчик для открытия формы при клике на элементы с атрибутом open-form-trigger
+  const openFormTriggers = document.querySelectorAll('[open-form-trigger]');
+  openFormTriggers.forEach((trigger) => {
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      const screenName = trigger.getAttribute('open-form-trigger');
+      console.log(`Клик на open-form-trigger: ${screenName}`);
+      if (screenName) {
+        const formPopup = document.querySelector('[form-popup]') as HTMLElement;
+        let startScreen = document.querySelector(`[screen-name="${screenName}"]`) as HTMLElement;
+        if (!startScreen) {
+          console.log(`Экран с именем ${screenName} не найден, открываем экран start.`);
+          startScreen = document.querySelector('[screen-name="start"]') as HTMLElement;
+        }
+        if (formPopup && startScreen) {
+          formPopup.classList.remove('hide');
+          startScreen.classList.remove('hide');
+          updateFormNavTip();
+          formPopup.style.opacity = '1';
+        }
+      }
+    });
+  });
 });
