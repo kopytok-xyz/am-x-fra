@@ -218,11 +218,49 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!formElement) return;
 
     console.log('--- Текущие значения всех инпутов формы ---');
+
+    // Получаем данные из FormData для обычных инпутов
     const formData = new FormData(formElement);
     const inputValues: Record<string, string> = {};
 
     formData.forEach((value, key) => {
       inputValues[key] = value.toString();
+    });
+
+    // Дополнительно собираем информацию о всех радио-кнопках и чекбоксах
+    const radioButtons = formElement.querySelectorAll('input[type="radio"]');
+    const checkboxes = formElement.querySelectorAll('input[type="checkbox"]');
+
+    // Группируем радио-кнопки по имени
+    const radioGroups: Record<string, { options: string[]; selected: string }> = {};
+
+    radioButtons.forEach((radio) => {
+      const radioInput = radio as HTMLInputElement;
+      const { name } = radioInput;
+      const { value } = radioInput;
+
+      if (!radioGroups[name]) {
+        radioGroups[name] = { options: [], selected: '' };
+      }
+
+      radioGroups[name].options.push(value);
+      if (radioInput.checked) {
+        radioGroups[name].selected = value;
+      }
+    });
+
+    // Добавляем информацию о радио-группах в отчет
+    Object.entries(radioGroups).forEach(([name, group]) => {
+      inputValues[`${name} (радио-группа)`] =
+        `Выбрано: ${group.selected || 'ничего'} из [${group.options.join(', ')}]`;
+    });
+
+    // Добавляем информацию о чекбоксах
+    checkboxes.forEach((checkbox) => {
+      const checkboxInput = checkbox as HTMLInputElement;
+      inputValues[`${checkboxInput.name} (чекбокс)`] = checkboxInput.checked
+        ? 'Выбран'
+        : 'Не выбран';
     });
 
     console.table(inputValues); // Выводим в виде таблицы для лучшей читаемости
