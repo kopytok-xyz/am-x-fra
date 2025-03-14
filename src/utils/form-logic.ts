@@ -239,9 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
     point.addEventListener('click', () => {
       const pointName = point.getAttribute('story-point');
       if (pointName) {
-        stepHistory.push(pointName);
-        updateStepHistoryInput();
-        console.log(`История шагов: ${stepHistory.join('-->')}`);
+        if (!stepHistory.includes(pointName)) {
+          stepHistory.push(pointName);
+          updateStepHistoryInput();
+          console.log(`История шагов: ${stepHistory.join('-->')}`);
+        }
+        console.log(`Клик на story-point: ${pointName}`);
       }
     });
   });
