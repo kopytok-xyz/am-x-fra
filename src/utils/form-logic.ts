@@ -53,6 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log(
         `Переключение с экрана ${currentScreen.getAttribute('screen-name')} на экран ${nextScreen.getAttribute('screen-name')}`
       );
+
+      // Обновляем видимость кнопки "Back"
+      updateBackButtonVisibility();
     }, 300);
   }
 
@@ -197,6 +200,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 300);
     }
   }
+
+  // Функция для обновления видимости кнопки "Back"
+  function updateBackButtonVisibility() {
+    const backButton = document.querySelector('[form-button-back]') as HTMLElement;
+    const currentScreen = document.querySelector('.section_step:not(.hide)') as HTMLElement;
+    if (backButton && currentScreen) {
+      const isStartScreen = currentScreen.getAttribute('screen-name') === 'start';
+      backButton.classList.toggle('hide-opacity', isStartScreen);
+    }
+  }
+
+  // Обновляем видимость кнопки "Back" при загрузке страницы
+  updateBackButtonVisibility();
 
   // Инициализируем текст подсказки при загрузке страницы
   updateFormNavTip();
