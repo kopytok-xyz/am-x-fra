@@ -98,6 +98,56 @@ document.addEventListener('DOMContentLoaded', () => {
   // Настраиваем перенаправление кликов с элементов radio-trigger-redirect на радио-кнопки
   setupRadioTriggerRedirection();
 
+  // Функция для инициализации атрибута checked-status у чекбоксов
+  function initCheckboxStatus() {
+    // Находим все чекбоксы на странице
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    checkboxes.forEach((checkbox) => {
+      const checkboxInput = checkbox as HTMLInputElement;
+
+      // Устанавливаем начальное значение атрибута checked-status
+      checkboxInput.setAttribute('checked-status', checkboxInput.checked ? 'true' : 'false');
+
+      // Добавляем обработчик клика на чекбокс
+      checkboxInput.addEventListener('click', () => {
+        console.log(
+          `🔔 КЛИК ПО ЧЕКБОКСУ: ${checkboxInput.name || checkboxInput.id || 'безымянный чекбокс'}`
+        );
+      });
+
+      // Добавляем обработчик изменения состояния чекбокса
+      checkboxInput.addEventListener('change', () => {
+        // Обновляем атрибут checked-status при изменении состояния
+        checkboxInput.setAttribute('checked-status', checkboxInput.checked ? 'true' : 'false');
+        console.log(
+          `Чекбокс ${checkboxInput.name || checkboxInput.id}: checked-status="${checkboxInput.getAttribute('checked-status')}"`
+        );
+
+        // Находим родительскую карточку и обновляем её класс
+        const card = checkboxInput.closest('[card-checkbox-view]');
+        if (card) {
+          if (checkboxInput.checked) {
+            card.classList.add('is-checked');
+            console.log(
+              `Карточка для чекбокса ${checkboxInput.name || checkboxInput.id} получила класс is-checked`
+            );
+          } else {
+            card.classList.remove('is-checked');
+            console.log(
+              `Карточка для чекбокса ${checkboxInput.name || checkboxInput.id} потеряла класс is-checked`
+            );
+          }
+        }
+      });
+    });
+
+    console.log(`Инициализирован атрибут checked-status для ${checkboxes.length} чекбоксов`);
+  }
+
+  // Вызываем функцию инициализации атрибута checked-status
+  initCheckboxStatus();
+
   // Массив для хранения истории переходов между экранами
   const screenHistory: string[] = [];
 
