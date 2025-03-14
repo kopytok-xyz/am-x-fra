@@ -297,6 +297,18 @@ document.addEventListener('DOMContentLoaded', () => {
           updateFormNavTip();
           formPopup.style.opacity = '1';
           startScreen.style.opacity = '1';
+
+          // Если открываемый экран не "start", добавляем "start" в историю переходов
+          if (screenName !== 'start') {
+            console.log('Добавляем "start" в историю переходов для корректной работы кнопки Back');
+            screenHistory.push('start');
+
+            // Также добавляем в историю шагов, если нужно
+            if (!stepHistory.includes('start')) {
+              stepHistory.push('start');
+              updateStepHistoryInput();
+            }
+          }
         }
       }
     });
