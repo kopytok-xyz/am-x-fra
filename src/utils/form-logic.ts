@@ -213,6 +213,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (backButton && currentScreen) {
       const isStartScreen = currentScreen.getAttribute('screen-name') === 'start';
       backButton.classList.toggle('hide-opacity', isStartScreen);
+
+      // Добавляем лог для отладки
+      console.log(
+        `Текущий экран: ${currentScreen.getAttribute('screen-name')}, кнопка Back ${isStartScreen ? 'скрыта' : 'видима'}`
+      );
     }
   }
 
@@ -309,6 +314,10 @@ document.addEventListener('DOMContentLoaded', () => {
               updateStepHistoryInput();
             }
           }
+
+          // Обновляем видимость кнопки Back после открытия формы
+          updateBackButtonVisibility();
+          console.log(`Обновлена видимость кнопки Back при открытии экрана ${screenName}`);
         }
       }
     });
