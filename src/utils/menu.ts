@@ -2,6 +2,7 @@ export const func_menu = () => {
   const menuInner = document.querySelector('.menu_inner');
   const scrollTrigger = document.querySelector('.menu_scroll-trigger');
   const sectionMenu = document.querySelector('.section_menu');
+  const toggleableButton = document.querySelector('.button-can-toggle .button.is-small.is-menu');
 
   if (menuInner && scrollTrigger && sectionMenu) {
     const handleResize = () => {
@@ -10,8 +11,14 @@ export const func_menu = () => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               menuInner.classList.remove('is-smaller');
+              if (toggleableButton) {
+                toggleableButton.classList.add('is-secondary');
+              }
             } else {
               menuInner.classList.add('is-smaller');
+              if (toggleableButton) {
+                toggleableButton.classList.remove('is-secondary');
+              }
             }
           });
         });
@@ -22,8 +29,14 @@ export const func_menu = () => {
           entries.forEach((entry) => {
             if (!entry.isIntersecting) {
               sectionMenu.classList.add('is-visible');
+              if (toggleableButton) {
+                toggleableButton.classList.remove('is-secondary');
+              }
             } else {
               sectionMenu.classList.remove('is-visible');
+              if (toggleableButton) {
+                toggleableButton.classList.add('is-secondary');
+              }
             }
           });
         });
