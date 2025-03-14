@@ -286,15 +286,17 @@ document.addEventListener('DOMContentLoaded', () => {
           startScreen = document.querySelector('[screen-name="start"]') as HTMLElement;
         }
         if (formPopup && startScreen) {
+          // Сначала скрываем все экраны
+          document.querySelectorAll('.section_step').forEach((screen) => {
+            (screen as HTMLElement).classList.add('hide');
+          });
+
+          // Затем показываем только нужный экран
           formPopup.classList.remove('hide');
           startScreen.classList.remove('hide');
           updateFormNavTip();
           formPopup.style.opacity = '1';
           startScreen.style.opacity = '1';
-          // Удаляем класс hide для всех экранов
-          document.querySelectorAll('.section_step').forEach((screen) => {
-            (screen as HTMLElement).classList.remove('hide');
-          });
         }
       }
     });
