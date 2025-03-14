@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (formPopup && startScreen) {
           // Сначала скрываем все экраны
-          document.querySelectorAll('.section_step').forEach((screen) => {
+          document.querySelectorAll('[screen-name]').forEach((screen) => {
             (screen as HTMLElement).classList.add('hide');
           });
 
