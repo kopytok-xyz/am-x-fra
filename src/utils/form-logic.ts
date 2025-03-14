@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Массив для хранения истории переходов между экранами
   const screenHistory: string[] = [];
 
+  // Массив для хранения истории шагов
+  const stepHistory: string[] = [];
+
   // Функция для перехода между экранами с анимацией
   function switchScreen(currentScreen: HTMLElement, nextScreen: HTMLElement) {
     // Плавно скрываем текущий экран
@@ -81,11 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Добавляем класс is-checked к текущей карточке
         card.classList.add('is-checked');
 
-        console.log(
-          `Radio name: ${radioButton.name}, value: ${radioButton.value}, status: ${radioButton.checked ? 'checked' : 'unchecked'}`
-        );
-        console.log(`Card class list: ${card.classList}`);
-
         // Проверяем наличие атрибута screen-name-next
         const nextScreenName = card.getAttribute('screen-name-next');
         if (nextScreenName) {
@@ -102,6 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentScreenName = currentScreen.getAttribute('screen-name');
             if (currentScreenName) {
               screenHistory.push(currentScreenName);
+            }
+
+            // Проверяем, если шаг уже существует в истории, не добавляем его снова
+            if (!stepHistory.includes(nextScreenName)) {
+              stepHistory.push(nextScreenName);
             }
 
             // Переключаем экраны
@@ -152,22 +155,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const backButton = document.querySelector('[form-button-back]');
   if (backButton) {
     backButton.addEventListener('click', () => {
-      // Проверяем, есть ли история переходов
       if (screenHistory.length > 0) {
-        // Получаем последний экран из истории
         const prevScreenName = screenHistory.pop();
-
-        // Находим текущий активный экран
         const currentScreen = document.querySelector('.section_step:not(.hide)') as HTMLElement;
-
-        // Находим предыдущий экран по имени из истории
         const prevScreen = document.querySelector(
           `[screen-name="${prevScreenName}"]`
         ) as HTMLElement;
 
         if (currentScreen && prevScreen) {
-          // Переключаем экраны
           switchScreen(currentScreen, prevScreen);
+          stepHistory.pop(); // Удаляем последний шаг из истории
+          updateStepHistoryInput();
+          console.log(`История шагов: ${stepHistory.join('-->')}`);
         }
       }
     });
@@ -216,4 +215,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Инициализируем текст подсказки при загрузке страницы
   updateFormNavTip();
+
+  // Функция для обновления скрытого инпута с историей шагов
+  function updateStepHistoryInput() {
+    const stepHistoryInput = document.querySelector('[name="step-history"]') as HTMLInputElement;
+    if (stepHistoryInput) {
+      stepHistoryInput.value = stepHistory.join('-->');
+    }
+  }
+
+  // Добавляем скрытый инпут для истории шагов
+  const formElement = document.querySelector('form');
+  if (formElement) {
+    const stepHistoryInput = document.createElement('input');
+    stepHistoryInput.type = 'hidden';
+    stepHistoryInput.name = 'step-history';
+    formElement.appendChild(stepHistoryInput);
+  }
+
+  // Обработчик для кликов по элементам с атрибутом [story-point]
+  const storyPoints = document.querySelectorAll('[story-point]');
+  storyPoints.forEach((point) => {
+    point.addEventListener('click', () => {
+      const pointName = point.getAttribute('story-point');
+      if (pointName) {
+        stepHistory.push(pointName);
+        updateStepHistoryInput();
+        console.log(`История шагов: ${stepHistory.join('-->')}`);
+      }
+    });
+  });
+
+  // Лог при запуске формы с первого экрана
+  console.log(`История шагов: ${stepHistory.join('-->')}`);
+
+  // Удаляем запрет на отправку формы и оставляем только логи по истории шагов
+  if (formElement) {
+    formElement.addEventListener('submit', () => {
+      // Удаляем запрет на отправку формы
+      // event.preventDefault();
+      // Удаляем вывод данных каждого поля в консоль
+      // const formData = new FormData(formElement);
+      // formData.forEach((value, key) => {
+      //   console.log(`${key}: ${value}`);
+      // });
+    });
+  }
 });
