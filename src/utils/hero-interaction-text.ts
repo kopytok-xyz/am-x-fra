@@ -25,16 +25,17 @@ export const func_heroInteractionText = () => {
 
       // Функция для плавного показа элемента
       const fadeIn = (element: Element, duration: number = 500): void => {
+        // Сначала устанавливаем стили для анимации
+        (element as HTMLElement).style.transition = `opacity ${duration}ms ease`;
+        (element as HTMLElement).style.opacity = '0';
+
+        // Удаляем класс hide после установки стилей
         element.classList.remove('hide');
 
-        // Устанавливаем начальную прозрачность
-        (element as HTMLElement).style.opacity = '0';
-        (element as HTMLElement).style.transition = `opacity ${duration}ms ease`;
-
         // Запускаем анимацию после небольшой задержки для применения стилей
-        setTimeout(() => {
+        requestAnimationFrame(() => {
           (element as HTMLElement).style.opacity = '1';
-        }, 10);
+        });
       };
 
       // Функция для плавного скрытия элемента
