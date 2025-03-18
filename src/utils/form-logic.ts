@@ -578,4 +578,36 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  function updateValidateButtonState() {
+    const validateScreen = document.querySelector('[validate]');
+    if (!validateScreen) return;
+
+    const checkboxes = validateScreen.querySelectorAll('input[type="checkbox"]');
+    const validateButton = validateScreen.querySelector('[validate-button]');
+
+    if (!validateButton) return;
+
+    const isAnyCheckboxChecked = Array.from(checkboxes).some(
+      (checkbox) => (checkbox as HTMLInputElement).checked
+    );
+
+    if (isAnyCheckboxChecked) {
+      validateButton.classList.remove('disabled');
+    } else {
+      validateButton.classList.add('disabled');
+    }
+  }
+
+  // Добавляем обработчик изменения состояния для всех чекбоксов
+  const validateScreen = document.querySelector('[validate]');
+  if (validateScreen) {
+    const checkboxes = validateScreen.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', updateValidateButtonState);
+    });
+
+    // Инициализируем состояние кнопки при загрузке страницы
+    updateValidateButtonState();
+  }
 });
