@@ -1,39 +1,26 @@
 export const func_form = () => {
-  const allTriggers = document.querySelectorAll('[top-range-trigger]');
+  const triggers = document.querySelectorAll('[top-range-trigger]');
 
-  if (allTriggers.length) {
-    allTriggers.forEach((trigger) => {
-      const parent = trigger.parentElement;
-      if (!parent) return;
+  const checkHeightAndAddClass = () => {
+    triggers.forEach((trigger) => {
+      const triggerHeight = trigger.getBoundingClientRect().height;
+      const viewportHeight = window.innerHeight;
+      const parent = trigger.closest('[is-top-waiter]');
 
-      const breakpointTop0 = parseFloat(parent.getAttribute('breakpoint-top-0')) || 0;
-      const breakpointTop768 = parseFloat(parent.getAttribute('breakpoint-top-768')) || 0;
-
-      const calculateDistanceInRem = () => {
-        const rect = trigger.getBoundingClientRect();
-        const remSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
-        const distanceTopInRem = rect.top / remSize;
-        const distanceBottomInRem = (window.innerHeight - rect.bottom) / remSize;
-
-        const threshold = window.innerWidth < 768 ? breakpointTop0 : breakpointTop768;
-
-        const conditionMet = distanceTopInRem <= threshold && distanceBottomInRem <= threshold;
-
-        if (conditionMet) {
-          parent.classList.add('is-top');
-        } else {
-          parent.classList.remove('is-top');
-        }
-      };
-
-      // Initial calculation
-      calculateDistanceInRem();
-
-      // Add event listeners to recalculate on scroll and resize
-      window.addEventListener('scroll', calculateDistanceInRem);
-      window.addEventListener('resize', calculateDistanceInRem);
+      if (parent && triggerHeight > 0.6 * viewportHeight) {
+        parent.classList.add('is-top');
+      } else if (parent) {
+        parent.classList.remove('is-top');
+      }
     });
-  } else {
-    console.log('No triggers found.');
-  }
+  };
+
+  // Initial check
+  checkHeightAndAddClass();
+
+  // Check height every 0.5 seconds
+  setInterval(checkHeightAndAddClass, 500);
+
+  // Add event listener for resize
+  window.addEventListener('resize', checkHeightAndAddClass);
 };
