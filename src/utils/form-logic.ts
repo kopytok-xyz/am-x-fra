@@ -278,140 +278,212 @@ document.addEventListener('DOMContentLoaded', () => {
   // Функция для фильтрации карточек [card-to-filter]
   function setupCardFiltering() {
     // Находим все карточки для фильтрации
-    const cardsToFilter = document.querySelectorAll('[card-to-filter]');
-    console.log('Найдено карточек для фильтрации:', cardsToFilter.length);
+    const cardsToFilter = document.querySelectorAll<HTMLElement>('[card-to-filter]');
 
-    // Находим все радио-кнопки с атрибутом filter-by (триггеры фильтрации)
-    const filterTriggers = document.querySelectorAll('input[type="radio"][filter-by]');
-    console.log('Найдено триггеров фильтрации:', filterTriggers.length);
+    // Находим контейнер с видимым состоянием и пустым состоянием
+    const visibleStateContainer = document.querySelector<HTMLElement>('[filter-visible-state]');
+    const emptyStateContainer = document.querySelector<HTMLElement>('[filter-empty-state]');
 
-    // Выведем все найденные инпуты с их атрибутами
-    filterTriggers.forEach((trigger, index) => {
-      const filterBy = trigger.getAttribute('filter-by');
-      console.log(`Триггер #${index + 1}:`, {
-        element: trigger,
-        filterBy: filterBy,
-        name: (trigger as HTMLInputElement).name,
-        checked: (trigger as HTMLInputElement).checked,
-      });
-    });
+    // Находим кнопку сброса фильтров
+    const clearFiltersButton = document.querySelector<HTMLElement>('[clear-filters-button]');
 
-    if (!cardsToFilter.length || !filterTriggers.length) {
-      console.log('Элементы для настройки фильтрации не найдены');
+    // Проверяем, есть ли элементы для фильтрации
+    if (cardsToFilter.length === 0) {
+      console.log('Не найдены карточки с атрибутом [card-to-filter]');
       return;
     }
 
-    // Выведем информацию о всех карточках
-    cardsToFilter.forEach((card, index) => {
-      console.log(`Карточка #${index + 1}:`, {
-        element: card,
-        partnerType: (card as HTMLElement).getAttribute('filter-by-data-partner-type'),
-        branches: (card as HTMLElement).getAttribute('filter-by-data-branches'),
-        locations: (card as HTMLElement).getAttribute('filter-by-data-locations'),
-      });
-    });
+    // Проверяем наличие контейнеров состояний
+    if (!visibleStateContainer) {
+      console.log('Не найден контейнер с атрибутом [filter-visible-state]');
+    }
 
-    // Объект для хранения активных фильтров
+    if (!emptyStateContainer) {
+      console.log('Не найден контейнер с атрибутом [filter-empty-state]');
+    }
+
+    // Объект для хранения активных фильтров для каждого типа
     const activeFilters: Record<string, string> = {
       'partner-type': 'all',
       branch: 'all',
       location: 'all',
     };
 
-    // Функция для обновления текста в dropdown-filter-current-label
+    // Находим все радио-кнопки с атрибутом filter-by
+    const filterTriggers = document.querySelectorAll<HTMLInputElement>(
+      'input[type="radio"][filter-by]'
+    );
+
+    console.log(
+      `Найдено ${cardsToFilter.length} карточек и ${filterTriggers.length} триггеров фильтрации`
+    );
+
+    // Функция для обновления лейбла в дропдауне
     function updateFilterLabel(inputElement: HTMLInputElement) {
       // Получаем значение атрибута filter-by-name
       const filterByName = inputElement.getAttribute('filter-by-name');
-      if (!filterByName) return;
 
-      // Определяем тип фильтра по имени группы радио-кнопок
-      let filterType = '';
-      if (inputElement.name.includes('region')) {
-        filterType = 'location';
-      } else if (inputElement.name.includes('purpose')) {
-        filterType = 'branch';
-      } else {
-        filterType = 'partner-type';
+      if (!filterByName) {
+        console.log('Атрибут filter-by-name не найден у:', inputElement);
+        return;
       }
 
-      // Находим ближайший дропдаун, содержащий текущую радио-кнопку
-      const parentDropdown = inputElement.closest('[dropdown-filter]');
-      if (!parentDropdown) return;
+      // Ищем ближайший родительский элемент с атрибутом dropdown-filter
+      const dropdownTrigger = inputElement
+        .closest('label')
+        ?.closest('.form-dropdown-component_list')
+        ?.closest('.w-dropdown');
+      const dropdownFilterAttr = dropdownTrigger?.getAttribute('dropdown-filter');
 
-      // Ищем элемент с атрибутом dropdown-filter-current-label внутри этого дропдауна
-      const labelElement = parentDropdown.querySelector('[dropdown-filter-current-label]');
-      if (!labelElement) return;
+      if (!dropdownTrigger || !dropdownFilterAttr) {
+        console.log('Не удалось найти выпадающее меню для:', inputElement);
+        return;
+      }
 
-      // Обновляем текст в найденном элементе
-      labelElement.textContent = filterByName;
-      console.log(`Обновлен текст в дропдауне для типа "${filterType}": "${filterByName}"`);
+      // Находим элемент с атрибутом dropdown-filter-current-label внутри этого меню
+      const currentLabel = dropdownTrigger.querySelector('[dropdown-filter-current-label]');
+
+      if (currentLabel) {
+        currentLabel.textContent = filterByName;
+        console.log(`Обновлен текст в dropdown-filter (${dropdownFilterAttr}): ${filterByName}`);
+      }
     }
 
-    // Функция для применения всех фильтров одновременно
+    // Функция для применения всех активных фильтров
     function applyAllFilters() {
-      console.log('Применяются все активные фильтры:', activeFilters);
+      console.log('Применяем фильтры:', activeFilters);
 
-      let visibleCardsCount = 0;
+      let visibleCount = 0;
 
+      // Перебираем все карточки и проверяем соответствие фильтрам
       cardsToFilter.forEach((card) => {
-        const cardElement = card as HTMLElement;
+        // Получаем значения атрибутов у карточки
+        const cardPartnerType = (
+          card.getAttribute('filter-by-data-partner-type') || ''
+        ).toLowerCase();
+        const cardBranches = (card.getAttribute('filter-by-data-branches') || '').toLowerCase();
+        const cardLocations = (card.getAttribute('filter-by-data-locations') || '').toLowerCase();
 
-        // Получаем значения атрибутов фильтрации карточки
-        const partnerType = cardElement.getAttribute('filter-by-data-partner-type') || '';
-        const branches = cardElement.getAttribute('filter-by-data-branches') || '';
-        const locations = cardElement.getAttribute('filter-by-data-locations') || '';
+        // Подготавливаем массивы значений, разделенных запятыми
+        const partnerTypes = cardPartnerType.split(',').map((type) => type.trim());
+        const branches = cardBranches.split(',').map((branch) => branch.trim());
+        const locations = cardLocations.split(',').map((location) => location.trim());
 
-        // Разделяем значения, если их несколько (через запятую)
-        const partnerTypeValues = partnerType.split(',').map((value) => value.trim());
-        const branchesValues = branches.split(',').map((value) => value.trim());
-        const locationsValues = locations.split(',').map((value) => value.trim());
-
-        // Проверяем соответствие каждому активному фильтру
+        // Проверяем соответствие фильтрам
         const matchesPartnerType =
           activeFilters['partner-type'] === 'all' ||
-          partnerTypeValues.includes(activeFilters['partner-type']);
+          partnerTypes.some((type) => type === activeFilters['partner-type']);
 
         const matchesBranch =
-          activeFilters['branch'] === 'all' || branchesValues.includes(activeFilters['branch']);
+          activeFilters['branch'] === 'all' ||
+          branches.some((branch) => branch === activeFilters['branch']);
 
         const matchesLocation =
           activeFilters['location'] === 'all' ||
-          locationsValues.includes(activeFilters['location']);
+          locations.some((location) => location === activeFilters['location']);
 
-        console.log(`Проверка карточки:`, {
-          card: cardElement,
-          partnerTypeValues,
-          branchesValues,
-          locationsValues,
-          matchesPartnerType,
-          matchesBranch,
-          matchesLocation,
-        });
+        // Карточка должна соответствовать всем активным фильтрам
+        const isVisible = matchesPartnerType && matchesBranch && matchesLocation;
 
-        // Карточка должна соответствовать ВСЕМ выбранным фильтрам
-        const shouldShow = matchesPartnerType && matchesBranch && matchesLocation;
-
-        // Показываем или скрываем карточку в зависимости от результата
-        if (shouldShow) {
-          cardElement.classList.remove('hide');
-          visibleCardsCount++;
-          console.log('Карточка показана');
+        // Применяем класс .hide в зависимости от результата
+        if (isVisible) {
+          card.classList.remove('hide');
+          visibleCount++;
         } else {
-          cardElement.classList.add('hide');
-          console.log('Карточка скрыта');
+          card.classList.add('hide');
         }
       });
 
-      // Проверяем, есть ли видимые карточки после применения фильтров
-      if (visibleCardsCount === 0) {
-        console.log(
-          '⚠️ НЕТ РЕЗУЛЬТАТОВ: Не найдено карточек, соответствующих всем выбранным фильтрам'
-        );
+      console.log(`Видимых карточек после фильтрации: ${visibleCount} из ${cardsToFilter.length}`);
+
+      // Отображаем пустое состояние, если нет видимых карточек
+      if (visibleCount === 0) {
+        console.warn('Нет карточек, соответствующих выбранным фильтрам');
+
+        // Показываем пустое состояние и скрываем основное состояние
+        if (emptyStateContainer) {
+          emptyStateContainer.classList.remove('hide');
+        }
+
+        if (visibleStateContainer) {
+          visibleStateContainer.classList.add('hide');
+        }
       } else {
-        console.log(
-          `Найдено ${visibleCardsCount} карточек, соответствующих всем выбранным фильтрам`
-        );
+        // Скрываем пустое состояние и показываем основное состояние
+        if (emptyStateContainer) {
+          emptyStateContainer.classList.add('hide');
+        }
+
+        if (visibleStateContainer) {
+          visibleStateContainer.classList.remove('hide');
+        }
       }
+    }
+
+    // Функция для сброса фильтров
+    function clearFilters() {
+      console.log('Сбрасываем все фильтры');
+
+      // Находим все радио-кнопки с атрибутом filter-can-be-clear
+      const clearableFilters = document.querySelectorAll<HTMLInputElement>(
+        'input[type="radio"][filter-can-be-clear]'
+      );
+
+      clearableFilters.forEach((filter) => {
+        // Выбираем первую радио-кнопку для каждого имени (группы)
+        const { name } = filter;
+        const firstRadio = document.querySelector<HTMLInputElement>(
+          `input[type="radio"][name="${name}"][filter-by="all"]`
+        );
+
+        if (firstRadio) {
+          firstRadio.checked = true;
+
+          // Обновляем активный фильтр
+          const filterType = getFilterTypeFromName(name);
+          if (filterType) {
+            activeFilters[filterType] = 'all';
+          }
+
+          // Обновляем лейбл в дропдауне
+          updateFilterLabel(firstRadio);
+
+          // Также добавляем класс wf-input-is-checked его родителю
+          const parent = firstRadio.closest('label');
+          if (parent) {
+            // Удалить класс у всех других радио-кнопок в этой группе
+            const allRadiosInGroup = document.querySelectorAll<HTMLInputElement>(
+              `input[type="radio"][name="${name}"]`
+            );
+            allRadiosInGroup.forEach((radio) => {
+              const radioParent = radio.closest('label');
+              if (radioParent) {
+                radioParent.classList.remove('wf-input-is-checked');
+              }
+            });
+
+            // Добавить класс текущему родителю
+            parent.classList.add('wf-input-is-checked');
+          }
+        }
+      });
+
+      // Применяем обновленные фильтры
+      applyAllFilters();
+    }
+
+    // Определяем тип фильтра по имени группы радио-кнопок
+    function getFilterTypeFromName(name: string): string | null {
+      if (name.includes('partner-type')) {
+        return 'partner-type';
+      }
+      if (name.includes('region')) {
+        return 'location';
+      }
+      if (name.includes('purpose')) {
+        return 'branch';
+      }
+      return null;
     }
 
     // Добавляем обработчики для радио-кнопок фильтрации
@@ -431,54 +503,46 @@ document.addEventListener('DOMContentLoaded', () => {
       // Проверяем изначально выбранные фильтры и обновляем метки
       if (triggerInput.checked) {
         // Определяем тип фильтра по имени группы радио-кнопок
-        let filterType = 'partner-type';
-
-        if (triggerInput.name.includes('region')) {
-          filterType = 'location';
-        } else if (triggerInput.name.includes('purpose')) {
-          filterType = 'branch';
+        const filterType = getFilterTypeFromName(triggerInput.name);
+        if (filterType) {
+          // Обновляем активный фильтр
+          activeFilters[filterType] = filterBy;
         }
-
-        // Обновляем активный фильтр
-        activeFilters[filterType] = filterBy;
 
         // Обновляем текст в dropdown-filter-current-label
         updateFilterLabel(triggerInput);
       }
 
+      // Добавляем обработчик события change для радио-кнопки
       triggerInput.addEventListener('change', () => {
         if (triggerInput.checked) {
-          console.log(`Триггер сработал: ${triggerInput.name} = ${filterBy}`);
-
           // Определяем тип фильтра по имени группы радио-кнопок
-          let filterType = 'partner-type';
+          const filterType = getFilterTypeFromName(triggerInput.name);
+          if (filterType) {
+            // Обновляем активный фильтр
+            activeFilters[filterType] = filterBy;
+            console.log(`Фильтр ${filterType} установлен в ${filterBy}`);
 
-          if (triggerInput.name.includes('region')) {
-            filterType = 'location';
-          } else if (triggerInput.name.includes('purpose')) {
-            filterType = 'branch';
+            // Применяем все активные фильтры
+            applyAllFilters();
+
+            // Обновляем текст в dropdown-filter-current-label
+            updateFilterLabel(triggerInput);
           }
-
-          // Обновляем активный фильтр
-          activeFilters[filterType] = filterBy;
-
-          console.log(`Обновлен фильтр: ${filterType} = ${filterBy}`);
-
-          // Обновляем текст в dropdown-filter-current-label
-          updateFilterLabel(triggerInput);
-
-          // Применяем все фильтры
-          applyAllFilters();
         }
       });
-
-      console.log(`Настроен триггер фильтрации для "${filterBy}"`);
     });
 
-    // Применяем фильтры при инициализации
-    applyAllFilters();
+    // Добавляем обработчик для кнопки сброса фильтров
+    if (clearFiltersButton) {
+      clearFiltersButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearFilters();
+      });
+    }
 
-    console.log('Система фильтрации карточек успешно настроена');
+    // Применяем фильтры сразу при загрузке страницы
+    applyAllFilters();
   }
 
   // Вызываем функцию настройки фильтрации карточек
