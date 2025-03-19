@@ -287,6 +287,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Находим кнопку сброса фильтров
     const clearFiltersButton = document.querySelector<HTMLElement>('[clear-filters-button]');
 
+    // Находим индикатор активных фильтров для мобильных устройств
+    const mobileFilterActiveIndicator = document.querySelector<HTMLElement>(
+      '[mobile-filter-active-indicator]'
+    );
+
     // Проверяем, есть ли элементы для фильтрации
     if (cardsToFilter.length === 0) {
       console.log('Не найдены карточки с атрибутом [card-to-filter]');
@@ -300,6 +305,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!emptyStateContainer) {
       console.log('Не найден контейнер с атрибутом [filter-empty-state]');
+    }
+
+    if (!mobileFilterActiveIndicator) {
+      console.log('Не найден индикатор с атрибутом [mobile-filter-active-indicator]');
     }
 
     // Объект для хранения активных фильтров для каждого типа
@@ -346,6 +355,29 @@ document.addEventListener('DOMContentLoaded', () => {
       if (currentLabel) {
         currentLabel.textContent = filterByName;
         console.log(`Обновлен текст в dropdown-filter (${dropdownFilterAttr}): ${filterByName}`);
+      }
+    }
+
+    // Функция для обновления индикатора активных фильтров
+    function updateMobileFilterIndicator() {
+      if (!mobileFilterActiveIndicator) return;
+
+      // Находим все радио-кнопки с атрибутом filter-circle-trigger
+      const circleTriggerRadios = document.querySelectorAll<HTMLInputElement>(
+        'input[type="radio"][filter-circle-trigger]'
+      );
+
+      // Проверяем, есть ли хотя бы одна активная радио-кнопка
+      const hasActiveCircleTrigger = Array.from(circleTriggerRadios).some((radio) => radio.checked);
+
+      if (hasActiveCircleTrigger) {
+        // Если есть активная радио-кнопка, показываем индикатор
+        mobileFilterActiveIndicator.classList.remove('hide');
+        console.log('Индикатор активных фильтров показан (активен filter-circle-trigger)');
+      } else {
+        // Если нет активных радио-кнопок, скрываем индикатор
+        mobileFilterActiveIndicator.classList.add('hide');
+        console.log('Индикатор активных фильтров скрыт (нет активных filter-circle-trigger)');
       }
     }
 
@@ -418,6 +450,9 @@ document.addEventListener('DOMContentLoaded', () => {
           visibleStateContainer.classList.remove('hide');
         }
       }
+
+      // Обновляем индикатор активных фильтров
+      updateMobileFilterIndicator();
     }
 
     // Функция для сброса фильтров
