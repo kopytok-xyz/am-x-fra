@@ -51,6 +51,10 @@ function clearAllInputsOnScreen(screen: HTMLElement) {
       if (card) {
         card.classList.remove('is-checked');
       }
+
+      // Генерируем событие change для этого чекбокса, чтобы обновить состояние кнопки validate
+      const changeEvent = new Event('change', { bubbles: true });
+      checkboxInput.dispatchEvent(changeEvent);
     }
   });
 
@@ -65,13 +69,27 @@ function clearAllInputsOnScreen(screen: HTMLElement) {
       if (card) {
         card.classList.remove('is-checked');
       }
+
+      // Генерируем событие change для этой радио-кнопки
+      const changeEvent = new Event('change', { bubbles: true });
+      radioInput.dispatchEvent(changeEvent);
     }
   });
 
   // Сбрасываем выбор в селектах
   selects.forEach((select) => {
-    (select as HTMLSelectElement).selectedIndex = 0;
+    const selectElement = select as HTMLSelectElement;
+    if (selectElement.selectedIndex !== 0) {
+      selectElement.selectedIndex = 0;
+
+      // Генерируем событие change для этого селекта
+      const changeEvent = new Event('change', { bubbles: true });
+      selectElement.dispatchEvent(changeEvent);
+    }
   });
+
+  // Прямой вызов updateValidateButtonState удален, так как функция будет
+  // вызвана автоматически через события change на чекбоксах
 
   console.log(`Все инпуты на экране ${screen.getAttribute('screen-name')} были очищены`);
 }
