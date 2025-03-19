@@ -367,17 +367,26 @@ document.addEventListener('DOMContentLoaded', () => {
         'input[type="radio"][filter-circle-trigger]'
       );
 
-      // Проверяем, есть ли хотя бы одна активная радио-кнопка
-      const hasActiveCircleTrigger = Array.from(circleTriggerRadios).some((radio) => radio.checked);
+      // Проверяем активные радио-кнопки, но исключаем те, у которых filter-by="all"
+      const hasActiveCircleTrigger = Array.from(circleTriggerRadios).some((radio) => {
+        // Проверяем, активна ли радио-кнопка
+        if (!radio.checked) return false;
+
+        // Проверяем, не имеет ли она значение "all"
+        const filterBy = radio.getAttribute('filter-by');
+        return filterBy !== 'all';
+      });
 
       if (hasActiveCircleTrigger) {
-        // Если есть активная радио-кнопка, показываем индикатор
+        // Если есть активная радио-кнопка (не "all"), показываем индикатор
         mobileFilterActiveIndicator.classList.remove('hide');
-        console.log('Индикатор активных фильтров показан (активен filter-circle-trigger)');
+        console.log('Индикатор активных фильтров показан (активен filter-circle-trigger не all)');
       } else {
-        // Если нет активных радио-кнопок, скрываем индикатор
+        // Если нет активных радио-кнопок или выбраны только "all", скрываем индикатор
         mobileFilterActiveIndicator.classList.add('hide');
-        console.log('Индикатор активных фильтров скрыт (нет активных filter-circle-trigger)');
+        console.log(
+          'Индикатор активных фильтров скрыт (нет активных filter-circle-trigger или выбран all)'
+        );
       }
     }
 
