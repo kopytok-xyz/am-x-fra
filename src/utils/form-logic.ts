@@ -227,6 +227,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Массив для хранения истории шагов
   const stepHistory: string[] = [];
 
+  // Массив для хранения "стартовых" экранов (точек входа в форму)
+  const entryScreenNames: string[] = ['start'];
+
   // Функция для замены значений value у элементов с атрибутом need-top-replace-with-js
   function replaceValuesFromParentAttributes() {
     // Находим все радио-кнопки и чекбоксы
@@ -450,6 +453,12 @@ document.addEventListener('DOMContentLoaded', () => {
         clearAllInputsOnScreen(screen as HTMLElement);
       });
 
+      // Сбрасываем массив точек входа, оставляя только стартовый экран
+      // Это позволит корректно работать с кнопкой Back при повторном открытии формы
+      entryScreenNames.length = 0;
+      entryScreenNames.push('start');
+      console.log('Сброшен список точек входа в форму');
+
       // Через 300мс добавляем класс hide
       setTimeout(() => {
         formPopup.classList.add('hide');
@@ -462,8 +471,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const backButton = document.querySelector('[form-button-back]') as HTMLElement;
     const currentScreen = document.querySelector('[screen-name]:not(.hide)') as HTMLElement;
     if (backButton && currentScreen) {
-      const isStartScreen = currentScreen.getAttribute('screen-name') === 'start';
-      backButton.classList.toggle('hide-opacity', isStartScreen);
+      const currentScreenName = currentScreen.getAttribute('screen-name') || '';
+      // Прячем кнопку Back на экранах, которые помечены как точки входа в форму
+      const shouldHide = entryScreenNames.includes(currentScreenName);
+      backButton.classList.toggle('hide-opacity', shouldHide);
+
+      console.log(
+        `Кнопка Back ${shouldHide ? 'скрыта' : 'показана'} на экране ${currentScreenName}`
+      );
     }
   }
 
@@ -633,6 +648,18 @@ document.addEventListener('DOMContentLoaded', () => {
           startScreen = document.querySelector('[screen-name="start"]') as HTMLElement;
         }
         if (formPopup && startScreen) {
+          // Получаем имя стартового экрана
+          const entryScreenName = startScreen.getAttribute('screen-name');
+
+          // Добавляем этот экран в список точек входа, если его там еще нет
+          if (entryScreenName && !entryScreenNames.includes(entryScreenName)) {
+            entryScreenNames.push(entryScreenName);
+            console.log(`Экран "${entryScreenName}" добавлен как точка входа`);
+          }
+
+          // Очищаем историю переходов при открытии формы
+          screenHistory.length = 0;
+
           // Сначала скрываем все экраны
           document.querySelectorAll('[screen-name]').forEach((screen) => {
             (screen as HTMLElement).classList.add('hide');
@@ -645,16 +672,16 @@ document.addEventListener('DOMContentLoaded', () => {
           formPopup.style.opacity = '1';
           startScreen.style.opacity = '1';
 
-          // Если открываемый экран не "start", добавляем "start" в историю переходов
-          if (screenName !== 'start') {
-            screenHistory.push('start');
-
-            // Также добавляем в историю шагов, если нужно
-            if (!stepHistory.includes('start')) {
-              stepHistory.push('start');
-              updateStepHistoryInput();
-            }
-          }
+          // Добавляем предыдущий экран в историю только если это не стартовый экран
+          // Это убрано, так как мы не хотим добавлять ничего в историю
+          // if (screenName !== 'start') {
+          //   screenHistory.push('start');
+          //
+          //   if (!stepHistory.includes('start')) {
+          //     stepHistory.push('start');
+          //     updateStepHistoryInput();
+          //   }
+          // }
 
           // Обновляем видимость кнопки Back после открытия формы
           updateBackButtonVisibility();
