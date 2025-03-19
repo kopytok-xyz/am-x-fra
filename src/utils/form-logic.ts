@@ -275,6 +275,180 @@ document.addEventListener('DOMContentLoaded', () => {
   // Вызываем функцию инициализации атрибута checked-status
   initCheckboxStatus();
 
+  // Функция для фильтрации карточек [card-to-filter]
+  function setupCardFiltering() {
+    // Находим все карточки для фильтрации
+    const cardsToFilter = document.querySelectorAll('[card-to-filter]');
+    console.log('Найдено карточек для фильтрации:', cardsToFilter.length);
+
+    // Находим все радио-кнопки с атрибутом filter-by (триггеры фильтрации)
+    const filterTriggers = document.querySelectorAll('input[type="radio"][filter-by]');
+    console.log('Найдено триггеров фильтрации:', filterTriggers.length);
+
+    // Выведем все найденные инпуты с их атрибутами
+    filterTriggers.forEach((trigger, index) => {
+      const filterBy = trigger.getAttribute('filter-by');
+      console.log(`Триггер #${index + 1}:`, {
+        element: trigger,
+        filterBy: filterBy,
+        name: (trigger as HTMLInputElement).name,
+        checked: (trigger as HTMLInputElement).checked,
+      });
+    });
+
+    if (!cardsToFilter.length || !filterTriggers.length) {
+      console.log('Элементы для настройки фильтрации не найдены');
+      return;
+    }
+
+    // Выведем информацию о всех карточках
+    cardsToFilter.forEach((card, index) => {
+      console.log(`Карточка #${index + 1}:`, {
+        element: card,
+        partnerType: (card as HTMLElement).getAttribute('filter-by-data-partner-type'),
+        branches: (card as HTMLElement).getAttribute('filter-by-data-branches'),
+        locations: (card as HTMLElement).getAttribute('filter-by-data-locations'),
+      });
+    });
+
+    // Объект для хранения активных фильтров
+    const activeFilters: Record<string, string> = {
+      'partner-type': 'all',
+      branch: 'all',
+      location: 'all',
+    };
+
+    // Функция для применения всех фильтров одновременно
+    function applyAllFilters() {
+      console.log('Применяются все активные фильтры:', activeFilters);
+
+      let visibleCardsCount = 0;
+
+      cardsToFilter.forEach((card) => {
+        const cardElement = card as HTMLElement;
+
+        // Получаем значения атрибутов фильтрации карточки
+        const partnerType = cardElement.getAttribute('filter-by-data-partner-type') || '';
+        const branches = cardElement.getAttribute('filter-by-data-branches') || '';
+        const locations = cardElement.getAttribute('filter-by-data-locations') || '';
+
+        // Разделяем значения, если их несколько (через запятую)
+        const partnerTypeValues = partnerType.split(',').map((value) => value.trim());
+        const branchesValues = branches.split(',').map((value) => value.trim());
+        const locationsValues = locations.split(',').map((value) => value.trim());
+
+        // Проверяем соответствие каждому активному фильтру
+        const matchesPartnerType =
+          activeFilters['partner-type'] === 'all' ||
+          partnerTypeValues.includes(activeFilters['partner-type']);
+
+        const matchesBranch =
+          activeFilters['branch'] === 'all' || branchesValues.includes(activeFilters['branch']);
+
+        const matchesLocation =
+          activeFilters['location'] === 'all' ||
+          locationsValues.includes(activeFilters['location']);
+
+        console.log(`Проверка карточки:`, {
+          card: cardElement,
+          partnerTypeValues,
+          branchesValues,
+          locationsValues,
+          matchesPartnerType,
+          matchesBranch,
+          matchesLocation,
+        });
+
+        // Карточка должна соответствовать ВСЕМ выбранным фильтрам
+        const shouldShow = matchesPartnerType && matchesBranch && matchesLocation;
+
+        // Показываем или скрываем карточку в зависимости от результата
+        if (shouldShow) {
+          cardElement.classList.remove('hide');
+          visibleCardsCount++;
+          console.log('Карточка показана');
+        } else {
+          cardElement.classList.add('hide');
+          console.log('Карточка скрыта');
+        }
+      });
+
+      // Проверяем, есть ли видимые карточки после применения фильтров
+      if (visibleCardsCount === 0) {
+        console.log(
+          '⚠️ НЕТ РЕЗУЛЬТАТОВ: Не найдено карточек, соответствующих всем выбранным фильтрам'
+        );
+      } else {
+        console.log(
+          `Найдено ${visibleCardsCount} карточек, соответствующих всем выбранным фильтрам`
+        );
+      }
+    }
+
+    // Добавляем обработчики для радио-кнопок фильтрации
+    filterTriggers.forEach((trigger) => {
+      const triggerInput = trigger as HTMLInputElement;
+
+      // Получаем атрибут filter-by прямо с инпута
+      const filterBy = triggerInput.getAttribute('filter-by');
+
+      if (!filterBy) {
+        console.log('Не найден атрибут filter-by у триггера', triggerInput);
+        return;
+      }
+
+      console.log(`Настраиваю триггер: инпут=${triggerInput.name}, filter-by=${filterBy}`);
+
+      // Проверяем изначально выбранные фильтры
+      if (triggerInput.checked) {
+        // Определяем тип фильтра по имени группы радио-кнопок
+        let filterType = 'partner-type';
+
+        if (triggerInput.name.includes('region')) {
+          filterType = 'location';
+        } else if (triggerInput.name.includes('purpose')) {
+          filterType = 'branch';
+        }
+
+        // Обновляем активный фильтр
+        activeFilters[filterType] = filterBy;
+      }
+
+      triggerInput.addEventListener('change', () => {
+        if (triggerInput.checked) {
+          console.log(`Триггер сработал: ${triggerInput.name} = ${filterBy}`);
+
+          // Определяем тип фильтра по имени группы радио-кнопок
+          let filterType = 'partner-type';
+
+          if (triggerInput.name.includes('region')) {
+            filterType = 'location';
+          } else if (triggerInput.name.includes('purpose')) {
+            filterType = 'branch';
+          }
+
+          // Обновляем активный фильтр
+          activeFilters[filterType] = filterBy;
+
+          console.log(`Обновлен фильтр: ${filterType} = ${filterBy}`);
+
+          // Применяем все фильтры
+          applyAllFilters();
+        }
+      });
+
+      console.log(`Настроен триггер фильтрации для "${filterBy}"`);
+    });
+
+    // Применяем фильтры при инициализации
+    applyAllFilters();
+
+    console.log('Система фильтрации карточек успешно настроена');
+  }
+
+  // Вызываем функцию настройки фильтрации карточек
+  setupCardFiltering();
+
   // Массив для хранения истории переходов между экранами
   const screenHistory: string[] = [];
 
