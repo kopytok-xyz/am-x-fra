@@ -318,6 +318,35 @@ document.addEventListener('DOMContentLoaded', () => {
       location: 'all',
     };
 
+    // Функция для обновления текста в dropdown-filter-current-label
+    function updateFilterLabel(inputElement: HTMLInputElement) {
+      // Получаем значение атрибута filter-by-name
+      const filterByName = inputElement.getAttribute('filter-by-name');
+      if (!filterByName) return;
+
+      // Определяем тип фильтра по имени группы радио-кнопок
+      let filterType = '';
+      if (inputElement.name.includes('region')) {
+        filterType = 'location';
+      } else if (inputElement.name.includes('purpose')) {
+        filterType = 'branch';
+      } else {
+        filterType = 'partner-type';
+      }
+
+      // Находим ближайший дропдаун, содержащий текущую радио-кнопку
+      const parentDropdown = inputElement.closest('[dropdown-filter]');
+      if (!parentDropdown) return;
+
+      // Ищем элемент с атрибутом dropdown-filter-current-label внутри этого дропдауна
+      const labelElement = parentDropdown.querySelector('[dropdown-filter-current-label]');
+      if (!labelElement) return;
+
+      // Обновляем текст в найденном элементе
+      labelElement.textContent = filterByName;
+      console.log(`Обновлен текст в дропдауне для типа "${filterType}": "${filterByName}"`);
+    }
+
     // Функция для применения всех фильтров одновременно
     function applyAllFilters() {
       console.log('Применяются все активные фильтры:', activeFilters);
@@ -399,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       console.log(`Настраиваю триггер: инпут=${triggerInput.name}, filter-by=${filterBy}`);
 
-      // Проверяем изначально выбранные фильтры
+      // Проверяем изначально выбранные фильтры и обновляем метки
       if (triggerInput.checked) {
         // Определяем тип фильтра по имени группы радио-кнопок
         let filterType = 'partner-type';
@@ -412,6 +441,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Обновляем активный фильтр
         activeFilters[filterType] = filterBy;
+
+        // Обновляем текст в dropdown-filter-current-label
+        updateFilterLabel(triggerInput);
       }
 
       triggerInput.addEventListener('change', () => {
@@ -431,6 +463,9 @@ document.addEventListener('DOMContentLoaded', () => {
           activeFilters[filterType] = filterBy;
 
           console.log(`Обновлен фильтр: ${filterType} = ${filterBy}`);
+
+          // Обновляем текст в dropdown-filter-current-label
+          updateFilterLabel(triggerInput);
 
           // Применяем все фильтры
           applyAllFilters();
