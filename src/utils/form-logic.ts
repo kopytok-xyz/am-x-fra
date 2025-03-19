@@ -1022,12 +1022,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
           console.error('Ошибка при клике по элементу сброса:', error);
         }
-
-        // Через 5 секунд закрываем форму
-        setTimeout(() => {
-          console.log('Закрываем форму через 5 секунд после успешной отправки');
-          closeForm();
-        }, 5000);
       } else {
         console.log('Элемент сброса [fs-formsubmit-element="reset"] не найден');
         console.log('Попробуем найти элемент через другие селекторы...');
@@ -1042,13 +1036,48 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           console.log('Альтернативный элемент сброса также не найден');
         }
-
-        // В любом случае, даже если не найден элемент сброса, закрываем форму через 5 секунд
-        setTimeout(() => {
-          console.log('Закрываем форму через 5 секунд после успешной отправки');
-          closeForm();
-        }, 5000);
       }
+
+      // В любом случае через 5 секунд закрываем форму
+      // Но перед закрытием формы принудительно выполняем сброс всех полей
+      setTimeout(() => {
+        console.log('Закрываем форму через 5 секунд после успешной отправки');
+
+        // Перед закрытием формы принудительно сбрасываем все поля на всех экранах
+        const allScreens = document.querySelectorAll('[screen-name]');
+        console.log(`Найдено ${allScreens.length} экранов для сброса полей`);
+
+        allScreens.forEach((screen) => {
+          console.log(
+            `Сбрасываем поля на экране: ${(screen as HTMLElement).getAttribute('screen-name')}`
+          );
+          clearAllInputsOnScreen(screen as HTMLElement);
+        });
+
+        // Также сбрасываем все формы целиком (для надежности)
+        const forms = document.querySelectorAll('form');
+        forms.forEach((form) => {
+          console.log('Сбрасываем форму:', form);
+          form.reset();
+        });
+
+        // Принудительно сбрасываем класс wf-input-is-checked у всех родительских элементов
+        const checkedParents = document.querySelectorAll('.wf-input-is-checked');
+        checkedParents.forEach((parent) => {
+          parent.classList.remove('wf-input-is-checked');
+          console.log('Удален класс wf-input-is-checked у элемента:', parent);
+        });
+
+        // Принудительно сбрасываем класс is-checked у всех элементов с card-checkbox-view
+        const checkedCards = document.querySelectorAll('[card-checkbox-view].is-checked');
+        checkedCards.forEach((card) => {
+          card.classList.remove('is-checked');
+          console.log('Удален класс is-checked у карточки:', card);
+        });
+
+        // После полного сброса закрываем форму
+        closeForm();
+      }, 5000);
     }
 
     // Устанавливаем глобальный обработчик XHR для перехвата успешных запросов к API Webflow
