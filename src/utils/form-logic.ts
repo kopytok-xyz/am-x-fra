@@ -21,6 +21,61 @@ export const func_formLogic = () => {
   }
 };
 
+// Функция для очистки всех инпутов на определенном экране
+function clearAllInputsOnScreen(screen: HTMLElement) {
+  if (!screen) return;
+
+  // Ищем все типы инпутов на экране
+  const textInputs = screen.querySelectorAll(
+    'input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea'
+  );
+  const checkboxes = screen.querySelectorAll('input[type="checkbox"]');
+  const radioButtons = screen.querySelectorAll('input[type="radio"]');
+  const selects = screen.querySelectorAll('select');
+
+  // Очищаем текстовые инпуты и textarea
+  textInputs.forEach((input) => {
+    (input as HTMLInputElement).value = '';
+  });
+
+  // Снимаем отметки с чекбоксов
+  checkboxes.forEach((checkbox) => {
+    const checkboxInput = checkbox as HTMLInputElement;
+    if (checkboxInput.checked) {
+      checkboxInput.checked = false;
+      // Обновляем атрибут checked-status, если он используется
+      checkboxInput.setAttribute('checked-status', 'false');
+
+      // Удаляем класс is-checked у родительской карточки, если есть
+      const card = checkboxInput.closest('[card-checkbox-view]');
+      if (card) {
+        card.classList.remove('is-checked');
+      }
+    }
+  });
+
+  // Снимаем выбор с радио-кнопок
+  radioButtons.forEach((radio) => {
+    const radioInput = radio as HTMLInputElement;
+    if (radioInput.checked) {
+      radioInput.checked = false;
+
+      // Удаляем класс is-checked у родительской карточки, если есть
+      const card = radioInput.closest('[card-checkbox-view]');
+      if (card) {
+        card.classList.remove('is-checked');
+      }
+    }
+  });
+
+  // Сбрасываем выбор в селектах
+  selects.forEach((select) => {
+    (select as HTMLSelectElement).selectedIndex = 0;
+  });
+
+  console.log(`Все инпуты на экране ${screen.getAttribute('screen-name')} были очищены`);
+}
+
 // Функция для перенаправления клика с fake-кнопок на real-кнопки
 function setupFakeButtonRedirection() {
   const fakeButtons = document.querySelectorAll('[form-button-fake]');
@@ -329,12 +384,18 @@ document.addEventListener('DOMContentLoaded', () => {
         ) as HTMLElement;
 
         if (currentScreen && prevScreen) {
+          // Очищаем все инпуты на текущем экране перед переходом на предыдущий
+          clearAllInputsOnScreen(currentScreen);
+
           switchScreen(currentScreen, prevScreen);
           stepHistory.pop(); // Удаляем последний шаг из истории
           updateStepHistoryInput();
         } else {
           const startScreen = document.querySelector('[screen-name="start"]') as HTMLElement;
           if (currentScreen && startScreen) {
+            // Очищаем все инпуты на текущем экране перед переходом на стартовый
+            clearAllInputsOnScreen(currentScreen);
+
             switchScreen(currentScreen, startScreen);
           }
         }
