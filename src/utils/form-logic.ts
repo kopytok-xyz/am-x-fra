@@ -1004,6 +1004,199 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       console.log('--- Конец содержимого инпутов ---');
     });
+
+    // Функция для обработки успешной отправки формы
+    function handleFormSuccess() {
+      console.log('Форма успешно отправлена, активируем сброс');
+
+      // Ищем элемент сброса
+      const resetElement = document.querySelector('[fs-formsubmit-element="reset"]');
+      console.log('Элемент сброса найден?', !!resetElement);
+
+      if (resetElement) {
+        // Кликаем по элементу сброса
+        console.log('Пытаемся кликнуть по элементу сброса:', resetElement);
+        try {
+          (resetElement as HTMLElement).click();
+          console.log('Клик по элементу сброса выполнен');
+        } catch (error) {
+          console.error('Ошибка при клике по элементу сброса:', error);
+        }
+
+        // Через 5 секунд закрываем форму
+        setTimeout(() => {
+          console.log('Закрываем форму через 5 секунд после успешной отправки');
+          closeForm();
+        }, 5000);
+      } else {
+        console.log('Элемент сброса [fs-formsubmit-element="reset"] не найден');
+        console.log('Попробуем найти элемент через другие селекторы...');
+
+        // Проверяем альтернативные селекторы
+        const alternativeResetElement = document.querySelector(
+          '.w-form-done button, .form-success button, [form-reset]'
+        );
+        if (alternativeResetElement) {
+          console.log('Найден альтернативный элемент сброса:', alternativeResetElement);
+          (alternativeResetElement as HTMLElement).click();
+        } else {
+          console.log('Альтернативный элемент сброса также не найден');
+        }
+
+        // В любом случае, даже если не найден элемент сброса, закрываем форму через 5 секунд
+        setTimeout(() => {
+          console.log('Закрываем форму через 5 секунд после успешной отправки');
+          closeForm();
+        }, 5000);
+      }
+    }
+
+    // Устанавливаем глобальный обработчик XHR для перехвата успешных запросов к API Webflow
+    const originalXHROpen = XMLHttpRequest.prototype.open;
+    const originalXHRSend = XMLHttpRequest.prototype.send;
+
+    XMLHttpRequest.prototype.open = function (method, url, ...args) {
+      // Сохраняем URL запроса для дальнейшей проверки
+      this._webflowFormUrl = url;
+      return originalXHROpen.apply(this, [method, url, ...args]);
+    };
+
+    XMLHttpRequest.prototype.send = function (data) {
+      // Оригинальный обработчик события load
+      const originalOnLoad = this.onload;
+
+      // Свой обработчик события load
+      this.onload = function (e) {
+        // Проверяем, относится ли запрос к API форм Webflow
+        const url = this._webflowFormUrl || '';
+        if (
+          (url.includes('/api/v1/form/') || url.includes('webflow.com/api/v1/form/')) &&
+          this.status === 200
+        ) {
+          console.log('Перехвачен успешный запрос к Webflow API форм:', url);
+          console.log('Статус ответа:', this.status);
+          console.log('Ответ:', this.responseText);
+
+          // Вызываем обработчик успешной отправки формы
+          setTimeout(handleFormSuccess, 500); // Небольшая задержка, чтобы DOM успел обновиться
+        }
+
+        // Вызываем оригинальный обработчик, если он существует
+        if (typeof originalOnLoad === 'function') {
+          originalOnLoad.call(this, e);
+        }
+      };
+
+      return originalXHRSend.apply(this, arguments);
+    };
+
+    console.log('Установлен перехватчик XHR для обнаружения успешных отправок форм Webflow');
+
+    // Для Fetch API также добавляем перехватчик
+    const originalFetch = window.fetch;
+    window.fetch = function (input, init) {
+      return originalFetch(input, init).then((response) => {
+        // Проверяем, относится ли запрос к API форм Webflow
+        const url = typeof input === 'string' ? input : input instanceof Request ? input.url : '';
+        if (
+          (url.includes('/api/v1/form/') || url.includes('webflow.com/api/v1/form/')) &&
+          response.status === 200
+        ) {
+          console.log('Перехвачен успешный fetch-запрос к Webflow API форм:', url);
+          console.log('Статус ответа:', response.status);
+
+          // Клонируем ответ, так как response.json() может быть выполнен только один раз
+          const clonedResponse = response.clone();
+          clonedResponse
+            .json()
+            .then((data) => {
+              console.log('Ответ:', data);
+
+              // Вызываем обработчик успешной отправки формы
+              setTimeout(handleFormSuccess, 500); // Небольшая задержка, чтобы DOM успел обновиться
+            })
+            .catch((err) => {
+              console.error('Ошибка при чтении JSON из ответа:', err);
+            });
+        }
+        return response;
+      });
+    };
+
+    console.log('Установлен перехватчик fetch для обнаружения успешных отправок форм Webflow');
+
+    // Используем все предыдущие методы тоже, для надежности
+
+    // 1. Стандартное событие formSubmitSuccess
+    window.addEventListener('formSubmitSuccess', (event) => {
+      console.log('Получено событие formSubmitSuccess', event);
+      const targetForm = event.target as HTMLElement;
+      if (targetForm && targetForm.closest('form') === formElement) {
+        handleFormSuccess();
+      }
+    });
+
+    // 2. Для Webflow также можно использовать наблюдение за появлением элемента .w-form-done
+    const formContainer = formElement.closest('.w-form');
+    if (formContainer) {
+      // Создаем наблюдатель за DOM
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList' && mutation.addedNodes.length) {
+            // Проверяем, был ли добавлен элемент успешной отправки
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1) {
+                const element = node as HTMLElement;
+                if (
+                  element.classList &&
+                  (element.classList.contains('w-form-done') ||
+                    element.classList.contains('form-success') ||
+                    element.classList.contains('w-form-success'))
+                ) {
+                  console.log('Обнаружено добавление элемента успешной отправки:', element);
+                  handleFormSuccess();
+                }
+              }
+            });
+          } else if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            // Проверяем изменение класса на существующих элементах
+            const target = mutation.target as HTMLElement;
+            if (
+              target.classList &&
+              (target.classList.contains('w-form-done') ||
+                target.classList.contains('form-success') ||
+                target.classList.contains('w-form-success')) &&
+              !target.classList.contains('hide')
+            ) {
+              console.log(
+                'Обнаружено отображение элемента успешной отправки через изменение класса:',
+                target
+              );
+              handleFormSuccess();
+            }
+          }
+        });
+      });
+
+      // Настраиваем наблюдатель для отслеживания изменений DOM и атрибутов
+      observer.observe(formContainer, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'style'],
+      });
+
+      console.log('Настроено расширенное наблюдение за элементами успешной отправки формы');
+
+      // Также проверяем видимые элементы успеха сразу
+      const successElements = formContainer.querySelectorAll(
+        '.w-form-done:not(.hide), .form-success:not(.hide), .w-form-success:not(.hide)'
+      );
+      if (successElements.length > 0) {
+        console.log('Найдены уже отображенные элементы успешной отправки:', successElements);
+        handleFormSuccess();
+      }
+    }
   }
 
   // Обработчик для открытия формы при клике на элементы с атрибутом open-form-trigger
