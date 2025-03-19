@@ -1,6 +1,6 @@
 // Объявляем функцию updateFormNavTip в глобальной области видимости
 function updateFormNavTip() {
-  const currentScreen = document.querySelector('.section_step:not(.hide)') as HTMLElement;
+  const currentScreen = document.querySelector('[screen-name]:not(.hide)') as HTMLElement;
   const formNavTipText = document.querySelector('[form-nav-tip-text]') as HTMLElement;
 
   if (currentScreen && formNavTipText) {
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nextScreenName = card.getAttribute('screen-name-next');
         if (nextScreenName) {
           // Находим текущий активный экран
-          const currentScreen = document.querySelector('.section_step:not(.hide)') as HTMLElement;
+          const currentScreen = document.querySelector('[screen-name]:not(.hide)') as HTMLElement;
 
           // Находим следующий экран по атрибуту screen-name
           const nextScreen = document.querySelector(
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nextScreenName = button.getAttribute('screen-name-next');
         if (nextScreenName) {
           // Находим текущий активный экран
-          const currentScreen = document.querySelector('.section_step:not(.hide)') as HTMLElement;
+          const currentScreen = document.querySelector('[screen-name]:not(.hide)') as HTMLElement;
 
           // Находим следующий экран по атрибуту screen-name
           const nextScreen = document.querySelector(
@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
     backButton.addEventListener('click', () => {
       if (screenHistory.length > 0) {
         const prevScreenName = screenHistory.pop();
-        const currentScreen = document.querySelector('.section_step:not(.hide)') as HTMLElement;
+        const currentScreen = document.querySelector('[screen-name]:not(.hide)') as HTMLElement;
         const prevScreen = document.querySelector(
           `[screen-name="${prevScreenName}"]`
         ) as HTMLElement;
@@ -373,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Функция для обновления видимости кнопки "Back"
   function updateBackButtonVisibility() {
     const backButton = document.querySelector('[form-button-back]') as HTMLElement;
-    const currentScreen = document.querySelector('.section_step:not(.hide)') as HTMLElement;
+    const currentScreen = document.querySelector('[screen-name]:not(.hide)') as HTMLElement;
     if (backButton && currentScreen) {
       const isStartScreen = currentScreen.getAttribute('screen-name') === 'start';
       backButton.classList.toggle('hide-opacity', isStartScreen);
@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Функция для обновления видимости нижней навигации
   function updateBottomNavVisibility() {
     const bottomNav = document.querySelector('.section_step.is-form-nav-bot') as HTMLElement;
-    const currentScreen = document.querySelector('.section_step:not(.hide)') as HTMLElement;
+    const currentScreen = document.querySelector('[screen-name]:not(.hide)') as HTMLElement;
 
     if (bottomNav && currentScreen) {
       const isChoosePartnerScreen = currentScreen.getAttribute('screen-name') === 'choose-partner';
