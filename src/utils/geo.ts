@@ -1,103 +1,150 @@
 import axios from 'axios';
 
+/**
+ * ИНСТРУКЦИЯ ПО РАБОТЕ С РЕГИОНАЛЬНЫМИ ФИЛЬТРАМИ
+ *
+ * 1. КАК РАБОТАЕТ СОПОСТАВЛЕНИЕ РЕГИОНОВ:
+ *    - Скрипт получает геолокацию пользователя через geo.js API
+ *    - API возвращает код континента (например, EU, AS, NA) и страну
+ *    - Скрипт сопоставляет эти данные с доступными фильтрами на странице
+ *
+ * 2. РЕКОМЕНДУЕМЫЕ ЗНАЧЕНИЯ ДЛЯ ФИЛЬТРОВ:
+ *    | Код GeoJS | Регион             | Значение для filter-by |
+ *    |-----------|--------------------|-----------------------|
+ *    | EU        | Европа             | europe                |
+ *    | AS        | Азия               | asia                  |
+ *    | NA        | Северная Америка   | usa                   |
+ *    | SA        | Южная Америка      | south-america         |
+ *    | AF        | Африка             | africa                |
+ *    | OC        | Океания            | oceania               |
+ *    | ME        | Ближний Восток     | uae                   |
+ *    | AN        | Антарктика         | antarctica            |
+ *
+ * 3. КАК ДОБАВЛЯТЬ НОВЫЕ РЕГИОНЫ:
+ *    - Создайте радио-кнопку с атрибутом name="region-list"
+ *    - Установите атрибут filter-by равным значению из таблицы выше
+ *    - Атрибут filter-by-name может содержать любое удобное для отображения название
+ *    - Пример: <input name="region-list" filter-by="africa" filter-by-name="Africa" type="radio">
+ *
+ * 4. АЛГОРИТМ СОПОСТАВЛЕНИЯ:
+ *    - Сначала ищет точное соответствие кода континента или названия страны
+ *    - Потом проверяет частичные совпадения (например, "emirates" в "united arab emirates")
+ *    - Если совпадение не найдено, выбирает первый доступный фильтр
+ */
+
 // Функция для применения фильтра по региону на основе геолокации
-function applyRegionFilter(regionCode: string) {
-  console.log(`Пытаемся применить фильтр по региону: ${regionCode}`);
+function applyRegionFilter(regionCode: string, countryName: string) {
+  console.log(`Пытаемся применить фильтр по региону: ${regionCode}, страна: ${countryName}`);
 
-  // Соответствие кодов континентов из geo.js значениям фильтра
-  const regionMapping: Record<string, string> = {
-    EU: 'europe', // Европа
-    AS: 'asia', // Азия
-    NA: 'usa', // Северная Америка -> США
-    AE: 'uae', // ОАЭ (специальный случай)
-    ME: 'uae', // Ближний Восток -> ОАЭ
-  };
+  // Получаем все доступные радио-кнопки фильтра по региону
+  const regionFilters = document.querySelectorAll<HTMLInputElement>(
+    'input[type="radio"][name="region-list"]'
+  );
 
-  // Получаем значение для фильтра на основе кода региона
-  const filterValue = regionMapping[regionCode] || '';
-
-  // Если нет подходящего значения для фильтра, выбираем первый регион из списка
-  if (!filterValue) {
-    console.log(
-      `Не найдено соответствие для региона ${regionCode}, выбираем первый доступный фильтр`
-    );
-
-    // Находим все радио-кнопки фильтра региона
-    const regionFilters = document.querySelectorAll('input[type="radio"][name="region-list"]');
-
-    if (regionFilters.length > 0) {
-      // Выбираем первую радио-кнопку
-      const firstRegionFilter = regionFilters[0] as HTMLInputElement;
-      firstRegionFilter.checked = true;
-
-      // Генерируем событие change для запуска фильтрации
-      const changeEvent = new Event('change', { bubbles: true });
-      firstRegionFilter.dispatchEvent(changeEvent);
-
-      console.log(`Выбран первый доступный фильтр региона: ${firstRegionFilter.value}`);
-    } else {
-      console.log('Не найдены фильтры по регионам');
-    }
-
+  // Если нет фильтров, выходим
+  if (regionFilters.length === 0) {
+    console.log('Не найдены фильтры по регионам');
     return;
   }
 
-  // Находим радио-кнопку фильтра с соответствующим значением
-  const regionFilter = document.querySelector(
-    `input[type="radio"][name="region-list"][filter-by="${filterValue}"]`
-  ) as HTMLInputElement;
+  // Создаем массив доступных значений фильтров
+  const availableFilters: { value: string; element: HTMLInputElement }[] = [];
+  regionFilters.forEach((filter) => {
+    const filterValue = filter.getAttribute('filter-by') || '';
+    availableFilters.push({ value: filterValue.toLowerCase(), element: filter });
+  });
 
-  if (regionFilter) {
-    // Отмечаем радио-кнопку фильтра
-    regionFilter.checked = true;
+  console.log(
+    'Доступные фильтры:',
+    availableFilters.map((f) => f.value)
+  );
+
+  // Пытаемся найти подходящий фильтр на основе кода континента
+  let matchedFilter: HTMLInputElement | null = null;
+
+  // Создаем массив возможных значений для поиска соответствия
+  // Преобразуем всё в нижний регистр для надежного сравнения
+  const searchValues = [
+    regionCode.toLowerCase(), // Код континента
+    countryName.toLowerCase(), // Название страны
+  ];
+
+  // Для некоторых известных континентов добавим расширенные варианты поиска
+  // Это помогает сопоставить коды континентов с общепринятыми названиями
+  if (regionCode === 'EU') searchValues.push('europe');
+  if (regionCode === 'AS') searchValues.push('asia');
+  if (regionCode === 'NA') searchValues.push('usa', 'america', 'north america');
+  if (regionCode === 'ME') searchValues.push('middle east', 'uae');
+  if (regionCode === 'SA') searchValues.push('south america', 'latin america');
+  if (regionCode === 'AF') searchValues.push('africa');
+  if (regionCode === 'OC') searchValues.push('oceania', 'australia');
+
+  // Специальная обработка для некоторых стран
+  if (countryName.includes('Arab') || countryName === 'UAE') {
+    searchValues.push('uae', 'emirates');
+  }
+  if (countryName.includes('United States') || countryName === 'USA') {
+    searchValues.push('usa', 'america');
+  }
+  if (countryName.includes('United Kingdom') || countryName === 'UK') {
+    searchValues.push('europe', 'uk');
+  }
+
+  console.log('Ищем соответствие для:', searchValues);
+
+  // Пытаемся найти соответствие в три этапа:
+  // 1. Точное совпадение
+  // 2. Значение фильтра содержится в искомом значении
+  // 3. Искомое значение содержится в значении фильтра
+  for (const searchValue of searchValues) {
+    for (const { value, element } of availableFilters) {
+      if (value === searchValue || value.includes(searchValue) || searchValue.includes(value)) {
+        matchedFilter = element;
+        console.log(`Найдено соответствие: ${searchValue} -> ${value}`);
+        break;
+      }
+    }
+    if (matchedFilter) break;
+  }
+
+  // Если не нашли соответствие, выбираем первый доступный фильтр
+  if (!matchedFilter && regionFilters.length > 0) {
+    const [firstFilter] = regionFilters;
+    matchedFilter = firstFilter;
+    console.log(
+      `Не найдено точного соответствия, выбираем первый доступный фильтр: ${matchedFilter.getAttribute('filter-by')}`
+    );
+  }
+
+  // Применяем выбранный фильтр
+  if (matchedFilter) {
+    matchedFilter.checked = true;
 
     // Генерируем событие change для запуска фильтрации
     const changeEvent = new Event('change', { bubbles: true });
-    regionFilter.dispatchEvent(changeEvent);
+    matchedFilter.dispatchEvent(changeEvent);
 
-    console.log(`Успешно применен фильтр по региону: ${filterValue}`);
-  } else {
-    console.log(`Не найден фильтр для региона: ${filterValue}`);
-
-    // Если не найден конкретный фильтр, выбираем первый
-    const regionFilters = document.querySelectorAll('input[type="radio"][name="region-list"]');
-
-    if (regionFilters.length > 0) {
-      // Выбираем первую радио-кнопку
-      const firstRegionFilter = regionFilters[0] as HTMLInputElement;
-      firstRegionFilter.checked = true;
-
-      // Генерируем событие change для запуска фильтрации
-      const changeEvent = new Event('change', { bubbles: true });
-      firstRegionFilter.dispatchEvent(changeEvent);
-
-      console.log(`Выбран первый доступный фильтр региона: ${firstRegionFilter.value}`);
-    } else {
-      console.log('Не найдены фильтры по регионам');
-    }
+    console.log(`Применен фильтр по региону: ${matchedFilter.getAttribute('filter-by')}`);
   }
 }
 
 export const func_geo = async () => {
   try {
+    // Получаем геолокацию пользователя через API geo.js
     const response = await axios.get('https://get.geojs.io/v1/ip/geo.json');
     const { city, country, continent_code } = response.data;
 
     console.log('Получены данные геолокации:', { city, country, continent_code });
 
-    // Добавляем атрибуты к body
+    // Добавляем атрибуты к body для возможного использования в CSS или других скриптах
     document.body.setAttribute('data-city', city);
     document.body.setAttribute('data-country', country);
     document.body.setAttribute('data-region', continent_code);
 
-    // Особая обработка для ОАЭ
-    if (country === 'United Arab Emirates' || country === 'UAE') {
-      document.body.setAttribute('data-special-region', 'uae');
-      applyRegionFilter('AE');
-    } else {
-      // Применяем фильтр по региону на основе кода континента
-      applyRegionFilter(continent_code);
-    }
+    // Применяем фильтр по региону с небольшой задержкой, чтобы DOM успел обновиться
+    setTimeout(() => {
+      applyRegionFilter(continent_code, country);
+    }, 1000);
   } catch (error) {
     console.error('Ошибка при получении геолокации:', error);
   }
