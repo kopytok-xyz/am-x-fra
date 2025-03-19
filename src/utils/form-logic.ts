@@ -442,6 +442,14 @@ document.addEventListener('DOMContentLoaded', () => {
       formPopup.style.transition = 'opacity 300ms ease';
       formPopup.style.opacity = '0';
 
+      // ВАЖНО: Сброс всех инпутов формы при закрытии
+      // Если клиент захочет сохранять значения полей при закрытии формы,
+      // закомментируйте или удалите следующие строки
+      const allScreens = document.querySelectorAll('[screen-name]');
+      allScreens.forEach((screen) => {
+        clearAllInputsOnScreen(screen as HTMLElement);
+      });
+
       // Через 300мс добавляем класс hide
       setTimeout(() => {
         formPopup.classList.add('hide');
