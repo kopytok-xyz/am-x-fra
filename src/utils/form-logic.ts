@@ -182,6 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // Устанавливаем начальное значение атрибута checked-status
       checkboxInput.setAttribute('checked-status', checkboxInput.checked ? 'true' : 'false');
 
+      // Устанавливаем начальное состояние класса .wf-input-is-checked у родителя
+      if (checkboxInput.checked && checkboxInput.parentElement) {
+        checkboxInput.parentElement.classList.add('wf-input-is-checked');
+      }
+
       // Добавляем обработчик клика на чекбокс
       checkboxInput.addEventListener('click', () => {
         console.log(
@@ -196,6 +201,21 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(
           `Чекбокс ${checkboxInput.name || checkboxInput.id}: checked-status="${checkboxInput.getAttribute('checked-status')}"`
         );
+
+        // Управляем классом wf-input-is-checked у родительского элемента
+        if (checkboxInput.parentElement) {
+          if (checkboxInput.checked) {
+            checkboxInput.parentElement.classList.add('wf-input-is-checked');
+            console.log(
+              `Родитель чекбокса ${checkboxInput.name || checkboxInput.id} получил класс wf-input-is-checked`
+            );
+          } else {
+            checkboxInput.parentElement.classList.remove('wf-input-is-checked');
+            console.log(
+              `Родитель чекбокса ${checkboxInput.name || checkboxInput.id} потерял класс wf-input-is-checked`
+            );
+          }
+        }
 
         // Находим родительскую карточку и обновляем её класс
         const card = checkboxInput.closest('[card-checkbox-view]');
@@ -216,6 +236,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     console.log(`Инициализирован атрибут checked-status для ${checkboxes.length} чекбоксов`);
+
+    // Инициализируем радио-кнопки
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+
+    radioButtons.forEach((radio) => {
+      const radioInput = radio as HTMLInputElement;
+
+      // Устанавливаем начальное состояние класса .wf-input-is-checked у родителя
+      if (radioInput.checked && radioInput.parentElement) {
+        radioInput.parentElement.classList.add('wf-input-is-checked');
+      }
+
+      // Добавляем обработчик изменения состояния радио-кнопки
+      radioInput.addEventListener('change', () => {
+        // Сначала снимаем класс со всех радио-кнопок той же группы
+        document.querySelectorAll(`input[name="${radioInput.name}"]`).forEach((rb) => {
+          if (rb.parentElement) {
+            rb.parentElement.classList.remove('wf-input-is-checked');
+          }
+        });
+
+        // Затем добавляем класс родителю выбранной радио-кнопки
+        if (radioInput.checked && radioInput.parentElement) {
+          radioInput.parentElement.classList.add('wf-input-is-checked');
+          console.log(
+            `Родитель радио-кнопки ${radioInput.name || radioInput.id} получил класс wf-input-is-checked`
+          );
+        }
+      });
+    });
+
+    console.log(
+      `Настроено управление классом wf-input-is-checked для ${radioButtons.length} радио-кнопок`
+    );
   }
 
   // Вызываем функцию инициализации атрибута checked-status
