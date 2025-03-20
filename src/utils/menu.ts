@@ -47,5 +47,22 @@ export const func_menu = () => {
 
     window.addEventListener('resize', handleResize);
     handleResize(); // Initial check
+
+    // Обработка кликов по ссылкам в .menu_nav при малых размерах экрана
+    const menuNav = document.querySelector('.menu_nav');
+    if (menuNav) {
+      menuNav.addEventListener('click', (event) => {
+        if (window.innerWidth < 768) {
+          const target = event.target as HTMLElement;
+          if (target.tagName === 'A' || target.closest('a')) {
+            const menuClickArea = document.querySelector('.menu_click-areaa');
+            if (menuClickArea) {
+              // Симуляция клика по .menu_click-areaa
+              (menuClickArea as HTMLElement).click();
+            }
+          }
+        }
+      });
+    }
   }
 };
