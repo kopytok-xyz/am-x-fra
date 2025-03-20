@@ -1012,38 +1012,53 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleFormSuccess() {
       console.log('Форма успешно отправлена, активируем сброс');
 
-      // Ищем элемент сброса
-      const resetElement = document.querySelector('[fs-formsubmit-element="reset"]');
-      console.log('Элемент сброса найден?', !!resetElement);
-
-      if (resetElement) {
-        // Кликаем по элементу сброса
-        console.log('Пытаемся кликнуть по элементу сброса:', resetElement);
+      // Ищем элемент анимации сброса, который должен быть кликнут моментально
+      const resetAnimationElement = document.querySelector('[form-reset-animation]');
+      if (resetAnimationElement) {
+        console.log('Найден элемент для анимации сброса, кликаем моментально');
         try {
-          (resetElement as HTMLElement).click();
-          console.log('Клик по элементу сброса выполнен');
+          (resetAnimationElement as HTMLElement).click();
+          console.log('Клик по элементу анимации сброса выполнен');
         } catch (error) {
-          console.error('Ошибка при клике по элементу сброса:', error);
+          console.error('Ошибка при клике по элементу анимации сброса:', error);
         }
       } else {
-        console.log('Элемент сброса [fs-formsubmit-element="reset"] не найден');
-        console.log('Попробуем найти элемент через другие селекторы...');
-
-        // Проверяем альтернативные селекторы
-        const alternativeResetElement = document.querySelector(
-          '.w-form-done button, .form-success button, [form-reset]'
-        );
-        if (alternativeResetElement) {
-          console.log('Найден альтернативный элемент сброса:', alternativeResetElement);
-          (alternativeResetElement as HTMLElement).click();
-        } else {
-          console.log('Альтернативный элемент сброса также не найден');
-        }
+        console.log('Элемент [form-reset-animation] не найден');
       }
 
-      // В любом случае через 5 секунд закрываем форму
-      // Но перед закрытием формы принудительно выполняем сброс всех полей
+      // Отложенный клик по элементу сброса через 5 секунд
       setTimeout(() => {
+        // Ищем элемент сброса
+        const resetElement = document.querySelector('[fs-formsubmit-element="reset"]');
+        console.log('Элемент сброса найден?', !!resetElement);
+
+        if (resetElement) {
+          // Кликаем по элементу сброса
+          console.log('Пытаемся кликнуть по элементу сброса через 5 секунд:', resetElement);
+          try {
+            (resetElement as HTMLElement).click();
+            console.log('Клик по элементу сброса выполнен');
+          } catch (error) {
+            console.error('Ошибка при клике по элементу сброса:', error);
+          }
+        } else {
+          console.log('Элемент сброса [fs-formsubmit-element="reset"] не найден');
+          console.log('Попробуем найти элемент через другие селекторы...');
+
+          // Проверяем альтернативные селекторы
+          const alternativeResetElement = document.querySelector(
+            '.w-form-done button, .form-success button, [form-reset]'
+          );
+          if (alternativeResetElement) {
+            console.log('Найден альтернативный элемент сброса:', alternativeResetElement);
+            (alternativeResetElement as HTMLElement).click();
+          } else {
+            console.log('Альтернативный элемент сброса также не найден');
+          }
+        }
+
+        // В любом случае через 5 секунд закрываем форму
+        // Но перед закрытием формы принудительно выполняем сброс всех полей
         console.log('Закрываем форму через 5 секунд после успешной отправки');
 
         // Перед закрытием формы принудительно сбрасываем все поля на всех экранах
@@ -1078,7 +1093,23 @@ document.addEventListener('DOMContentLoaded', () => {
           console.log('Удален класс is-checked у карточки:', card);
         });
 
-        // После полного сброса закрываем форму
+        // После полного сброса закрываем форму и переходим на начальный экран
+        // Получаем первый экран чтобы перейти к нему
+        const firstScreen = document.querySelector('[screen-name="start"]');
+        if (firstScreen) {
+          console.log('Переходим на стартовый экран');
+          // Скрываем все экраны
+          const allScreenElems = document.querySelectorAll('[screen-name]');
+          allScreenElems.forEach((screen) => {
+            screen.classList.add('hide');
+          });
+          // Показываем первый экран
+          firstScreen.classList.remove('hide');
+          // Обновляем статус кнопки Back
+          updateBackButtonVisibility();
+        }
+
+        // Закрываем форму
         closeForm();
       }, 5000);
     }
