@@ -843,8 +843,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentScreen = document.querySelector('[screen-name]:not(.hide)') as HTMLElement;
     if (backButton && currentScreen) {
       const currentScreenName = currentScreen.getAttribute('screen-name') || '';
+
       // Прячем кнопку Back на экранах, которые помечены как точки входа в форму
-      const shouldHide = entryScreenNames.includes(currentScreenName);
+      // А также гарантированно скрываем на стартовом экране
+      const shouldHide =
+        entryScreenNames.includes(currentScreenName) || currentScreenName === 'start';
       backButton.classList.toggle('hide-opacity', shouldHide);
 
       console.log(
