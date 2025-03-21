@@ -1,12 +1,14 @@
 export const tagsCards = () => {
-  const all_tagsCards = document.querySelectorAll('.card-features');
+  const all_tagsCards = document.querySelectorAll('[card-feature]');
   if (all_tagsCards.length) {
     all_tagsCards.forEach((card) => {
       card.addEventListener('click', () => {
-        const imageWrapper = card.querySelector('.card-features_image-wrapper');
+        const imageWrapper = card.querySelector('.card-features_image-wrapper') as HTMLElement;
         const featuresListWrapper = card.querySelector('.card-features_features-list-wrapper');
         const plusButtonIcon = card.querySelector('.card-features_plus-button-icon');
-        const listItems = card.querySelectorAll('.card-features_features-list-item');
+        const listItems = card.querySelectorAll(
+          '.card-features_features-list-item'
+        ) as NodeListOf<HTMLElement>;
 
         if (imageWrapper) {
           imageWrapper.classList.toggle('hide');
