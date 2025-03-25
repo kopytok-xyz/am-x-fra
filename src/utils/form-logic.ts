@@ -808,6 +808,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Функция для управления скроллом body
+  function toggleBodyScroll(disable: boolean) {
+    const { body } = document;
+    if (disable) {
+      // Сохраняем текущую позицию скролла
+      const { scrollY } = window;
+      body.style.position = 'fixed';
+      body.style.top = `-${scrollY}px`;
+      body.style.width = '100%';
+    } else {
+      // Восстанавливаем позицию скролла
+      const scrollY = body.style.top;
+      body.style.position = '';
+      body.style.top = '';
+      body.style.width = '';
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    }
+  }
+
   // Функция для закрытия формы
   function closeForm() {
     const formPopup = document.querySelector('[form-popup]') as HTMLElement;
@@ -830,9 +849,10 @@ document.addEventListener('DOMContentLoaded', () => {
       entryScreenNames.push('start');
       console.log('Сброшен список точек входа в форму');
 
-      // Через 300мс добавляем класс hide
+      // Через 300мс добавляем класс hide и разблокируем скролл
       setTimeout(() => {
         formPopup.classList.add('hide');
+        toggleBodyScroll(false);
       }, 300);
     }
   }
@@ -1299,16 +1319,8 @@ document.addEventListener('DOMContentLoaded', () => {
           formPopup.style.opacity = '1';
           startScreen.style.opacity = '1';
 
-          // Добавляем предыдущий экран в историю только если это не стартовый экран
-          // Это убрано, так как мы не хотим добавлять ничего в историю
-          // if (screenName !== 'start') {
-          //   screenHistory.push('start');
-          //
-          //   if (!stepHistory.includes('start')) {
-          //     stepHistory.push('start');
-          //     updateStepHistoryInput();
-          //   }
-          // }
+          // Блокируем скролл на body
+          toggleBodyScroll(true);
 
           // Обновляем видимость кнопки Back после открытия формы
           updateBackButtonVisibility();
