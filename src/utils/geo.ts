@@ -107,12 +107,13 @@ function applyRegionFilter(regionCode: string, countryName: string) {
     if (matchedFilter) break;
   }
 
-  // Если не нашли соответствие, выбираем первый доступный фильтр
-  if (!matchedFilter && regionFilters.length > 0) {
-    const [firstFilter] = regionFilters;
-    matchedFilter = firstFilter;
+  // Если не нашли соответствие, выбираем фильтр с атрибутом is-it-default-location="true"
+  if (!matchedFilter) {
+    matchedFilter =
+      Array.from(regionFilters).find((filter) => filter.hasAttribute('is-it-default-location')) ||
+      regionFilters[0]; // Если не найден, выбираем первый доступный
     console.log(
-      `Не найдено точного соответствия, выбираем первый доступный фильтр: ${matchedFilter.getAttribute('filter-by')}`
+      `Не найдено точного соответствия, выбираем фильтр по умолчанию: ${matchedFilter.getAttribute('filter-by')}`
     );
   }
 
