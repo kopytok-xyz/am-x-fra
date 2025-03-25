@@ -7,7 +7,7 @@ export const func_form = () => {
       const viewportHeight = window.innerHeight;
       const parent = trigger.closest('[is-top-waiter]');
 
-      if (parent && triggerHeight > 0.6 * viewportHeight) {
+      if (parent && triggerHeight > 0.8 * viewportHeight) {
         parent.classList.add('is-top');
       } else if (parent) {
         parent.classList.remove('is-top');
