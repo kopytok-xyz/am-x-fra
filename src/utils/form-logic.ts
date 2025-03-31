@@ -413,15 +413,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // Проверяем соответствие фильтрам
         const matchesPartnerType =
           activeFilters['partner-type'] === 'all' ||
-          partnerTypes.some((type) => type === activeFilters['partner-type']);
+          partnerTypes.some(
+            (type) => type.trim().toLowerCase() === activeFilters['partner-type'].toLowerCase()
+          );
 
         const matchesBranch =
           activeFilters['branch'] === 'all' ||
-          branches.some((branch) => branch === activeFilters['branch']);
+          branches.some(
+            (branch) => branch.trim().toLowerCase() === activeFilters['branch'].toLowerCase()
+          );
 
         const matchesLocation =
           activeFilters['location'] === 'all' ||
-          locations.some((location) => location === activeFilters['location']);
+          locations.some(
+            (location) => location.trim().toLowerCase() === activeFilters['location'].toLowerCase()
+          );
 
         // Карточка должна соответствовать всем активным фильтрам
         const isVisible = matchesPartnerType && matchesBranch && matchesLocation;
