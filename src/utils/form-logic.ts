@@ -423,8 +423,10 @@ document.addEventListener('DOMContentLoaded', () => {
             (branch) => branch.trim().toLowerCase() === activeFilters['branch'].toLowerCase()
           );
 
+        // Изменяем логику проверки локаций
         const matchesLocation =
           activeFilters['location'] === 'all' ||
+          locations.includes('all') || // Если в карточке есть "all", она подходит под любой фильтр локаций
           locations.some(
             (location) => location.trim().toLowerCase() === activeFilters['location'].toLowerCase()
           );
