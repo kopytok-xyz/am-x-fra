@@ -1,0 +1,145 @@
+ALINOM
+PRIVACY POLICY
+Version as of April 2025. Actual version is available at: link.
+BY USING OUR WEBSITE, OR PROVIDING YOUR PERSONAL DATA TO US, AND SUBJECT TO YOUR RIGHTS AT LAW, YOU CONFIRM THAT YOU HAVE READ, UNDERSTOOD AND ACCEPTED THIS PRIVACY POLICY.
+PLEASE ENSURE YOU HAVE READ IT CAREFULLY, PARTICULARLY THE SECTION DETAILING YOUR RIGHTS ABOUT THE PERSONAL DATA THAT WE COLLECT ABOUT YOU.
+IF YOU DO NOT AGREE WITH ANY ASPECT OF THE PRIVACY POLICY, PLEASE DO NOT ACCESS OR USE OUR WEBSITE.
+WHAT THIS POLICY IS ABOUT?
+This document describes how We ensure Your privacy in Alinom. This Privacy Policy (the Policy) describes how the Alinom operator (We, Us, Our) collects, uses, stores, and discloses Personal Data of a user (You, Your), when using the functions of Our official website (https://alinom.com/) (the Website).
+Privacy principles which guide Us. To ensure Your privacy, We:
+do not collect any Personal Data without sufficient lawful basis (e. g., Your consent);
+collect only a minimum amount of Personal Data that is needed for You to enjoy the full Website functionality;
+do not monetize Your Personal Data;
+process Your Personal Data as transparently as practically possible.
+What You guarantee to Us? By providing access to the Website, We act reasonably as well as in good faith and believe that You:
+have all necessary rights to use the Website;
+provide true, accurate, current and complete information about Yourself;
+reach the minimum age in the relevant territory or Your parents or other legal representatives agree that You use the Website;
+carefully read, understand, and accept the Policy.
+We follow applicable privacy legislation worldwide. We are guided by relevant laws and regulations regarding privacy and Personal Data protection, including the Regulation (EU) 2016/679 or General Data Protection Regulation (GDPR) and the UAE Federal Decree by Law No. (45) of 2021 Concerning the Protection of Personal Data (UAE Law). Please note that some terms, procedures, rights and obligations related to privacy may vary in different countries, depending on the applicable local laws.
+What Personal Data is? For purposes of the Policy, Personal Data means any information that directly or indirectly identifies a particular individual, including any other information that is subject to applicable data protection laws.
+The Policy applies to users of the Website only. The Policy applies to Our collection, use and disclosure of Personal Data related to the users of Our Website. The Policy does not apply to job applicants or to Our employees and non-employee contractors, whose Personal Data is subject to different privacy policy/notices.
+How to interpret the Policy. Headings and subheadings shall be ignored in interpreting the Policy. Unless otherwise specified explicitly, the words “including”, “include”, “in particular” and similar shall not be deemed to limit the general effect of the words that precede them. Definitions imported in plural (or in singular) have the same meaning in singular (or in plural) with appropriate corrections.
+ABOUT US
+Who are We? Our legal details are:
+Our legal entity name: Initi Solo Information Technology Co;
+Our company license: 1145367;
+Our legal address: UAE, Dubai, Ras Al Khor Industrial Third, SHOWROOM-01-163.
+Our role while processing Your data. We are a data controller. This means that We determine the purposes and means of the Personal Data processing and, therefore, are responsible for handling Your Personal Data.
+Who to contact if You have requests related to Your privacy? For requests, questions, or complaints about processing Your Personal Data or Our handling of Personal Data, please send requests to a person that We appointed as responsible for users’ privacy matters, at any of the following:
+official email: info@alinom.com;
+correspondence address: UAE, Dubai, Ras Al Khor Industrial Third, SHOWROOM-01-163.
+Rules on responding to Your requests. Before responding to the request, We will take reasonable steps to verify the identity of the person making the request. If We doubt the identity of the person making the request, We may ask for additional information to confirm the identity. We may refuse to act on the request:
+if having requested additional information We are still not able to identify the person; or
+the request at issue is unreasonable or impractical (where such a refuse permitted by local law).
+We will respond to Your requests in a reasonable timeframe.
+Contact Us first if You have questions on privacy. Once We receive Your request, We contact You to find out how We can help. If You have any complaints about how We process Your Personal Data, We will always prefer that You contact Us first.
+WE CAN CHANGE THE POLICY
+We have the right to change the Policy. We reserve the right to change the terms of the Policy at any time and at Our discretion to ensure that it is consistent with future developments, industry trends and/or any changes in legal requirements.
+We strive to notify You on changes to the Policy. If We decide to update the Policy, We are not obliged, but We will do Our best to notify You about the changes before they take effect via the Website. Choosing the specific way to inform You is solely up to Us. Additionally, We will alway spost the new version of the Policy here so that You always know about Our current approach to Your Personal Data processing.
+Please, check back regularly for updated information on the handling of Your Personal Data.
+You agree to follow the newest terms of the Policy. Subject to Your rights at law, You agree to be bound by the prevailing terms of the Policy as updated from time-to-time as prescribed by this section. You may not accept updated terms only by ceasing to use the Website.
+WHAT PERSONAL DATA WE PROCESS AND HOW WE DO THIS
+What types of Your data do We process? We process Your Personal Data only that You or Your legal representative provides Us with. The scope of Personal Data We process varies based on the purpose for which We process it. Details of Personal Data processing are specified in the table below:
+
+Purposes for which We process Personal Data
+Scope of processing
+The lawful basis for processing
+Periods for which We retain Personal Data
+Processing of Your applications for:
+Downloading Alinom;
+Processing an application for partnership with Us;
+Obtaining an official certificate from Us validating Your experience in Alinom;
+Training in Alinom;
+Obtaining support;
+Obtaining custom solution/integration of Alinom
+Email address
+Name
+Phone
+Content of Your comment to an application
+We process Your Personal Data on the basis of Your consent.
+Such consent is deemed given by you if you put a tick in the “I agree to the processing of my Personal Data” box that will appear when you register on the Website.
+We only store Personal Data for as long as necessary for the purpose the data was collected for.
+This means that Personal Data collection based on Your consent will be deleted if You withdraw Your consent, unless We are required to retain all or part of the data under applicable law.
+After that, Personal Data is destroyed by erasing from Our devices.
+Offering a partner in Your location
+IP-address
+
+When We start to process data. We will start processing Your Personal Data when We determine Your country via IP-address. Processing of other types of Personal Data will start if You send Us an application for action via the Website as specified in the table above. Your Personal Data will not be collected and processed by Us if You do not access the Website
+You are not obliged to provide data. The provision of Personal Data is not a statutory or contractual requirement, as well as is not a requirement necessary to enter into a contract. You are free to reject the processing of Your Personal Data.
+But if We don’t have data, We may limit access to the Website. At the same time, if You reject to consent to Our processing of Your Personal Data, We may limit Your access to the Website functionality. We are not liable if the missing Personal Data processing prevents the adequate use of the Website.
+Your rights in relation to the processing Your data. You have many rights over Your Personal Data and how it may be used. Below are set out the major rights, which are available to You at any time, and how to make use of those rights. To use Your rights, send Us an email via the specified in clause 2.3. of the Policy with the topic “Personal Data Subject Request”.
+
+Type of a right
+Description
+Right to access Personal Data
+You can ask Us about:
+What Your Personal Data We have (and get a copy of it);
+How We use it;
+Why We process them;
+Who We shared it with; and more.
+Right to object to the processing of Personal Data
+You can tell Us to stop and We will no longer process Your Personal Data, but We can still keep them if there is legitimate ground for that.
+Right to erasure
+You can ask Us to delete all Personal Data that We have about You – it is Your right to be forgotten, as if We have never met before.
+However, We have the right not to erase Your Personal Data and process it insofar as the processing is permitted by the applicable law on Personal Data, including purposes of settling claims and disputes, as well as sending responses to requests from public authorities.
+You agree that such erasure imply loss of access to the functionality (its part) of the Website, considering clause 4.3. of the Policy.
+Right to rectify Personal Data
+You can ask Us to update, block or delete Your Personal Data if the data is incomplete, outdated, incorrect, unlawfully received or there is no need to proceed with it anymore.
+Right to restrict the use of Personal Data
+For example, if You think that Your Personal Data is not accurate, and We need time to check it, We can pause in processing Your Personal Data enough to clarify, whether it is so or not.
+Right to data portability
+You can ask Us to download (export) all Personal Data that We have in the format acceptable to give it to someone else or ask Us to give them Your data directly (on a basis of Your consent).
+Right to lodge a complaint with a supervisory authority
+You can always complain about Us and about the way We process Your Personal Data. Please note that authority depends on the location where You reside.
+
+Confidentiality of Your data. We deem confidential any of Your Personal Data. Nevertheless, We can disclose them in cases stipulated in applicable local laws, including GDPR and UAE law. In particular, to public authorities.
+We may process Your communications to Us. We may collect information about You from any emails or letters that You send to Us. We only use such information in accordance with the Policy.
+We do not send marketing emails to You with Your Consent. If You give Us the consent to process Your Personal Data in accordance with the Policy, this consent does not allow Us to sent marketing communications to You. If We want to send such communications to You, We will update Our policy and ask for Your separate consent for it.
+Who can obtain Your data from Us. We use the services of some processors in order to process Your Personal Data, namely:
+
+Processor
+What it does
+Privacy details
+Our partners
+The list of Our partners is dynamic and subject to changes over time.
+If You want to check full actual list of Our partners, please, email Us at info@alinom.com and We will send it to You.
+Our partners provide Us with distribution, training, and contribution functions for Alinom in different countries.
+Their processing of Your Personal data is governed by this Privacy Policy.
+
+Third-parties
+We do not share Your Personal Data with other third parties, except from those specified above.
+n/a
+n/a
+
+These processors store Your Personal Data on their servers and provide Us with other services of support for the Products.
+They process Your Personal Data in accordance with the terms of the written contracts concluded between Us and them. These contracts provide that the processors shall process and use Your Personal Data only to the extent provided in the contracts. The terms of these contracts do not violate Our obligations to You and Your rights as a data subject.
+No sensitive data processing. We do not process any special categories of Personal Data. If such data accidentally comes to Us, We immediately delete it and use any other reasonable measures to prevent the disclosure of such information to third parties.
+No scraping of data. We do not receive Your Personal Data from publicly accessible sources.
+No automated decision-making. We do not process Your Personal Data automatically, so You cannot be the subject of a decision based solely on automated processing, including profiling.
+WE USE COOKIES
+What are cookies? We use cookies and other tracking technologies on our Website. Cookies are small text files that are downloaded to your device when You visit the Website and that identify Your browser or device. The next time You visit the Website, it will recognize the cookies as well as Your device and send this information back to the Website, which originally created the cookies, or to another website, platform, or application that recognizes them. Other types of tracking technologies work similarly to cookies and place small data files on Your devices or monitor Your internet activity to enable Us to collect information about how You use the Website. Cookies and other tracking technologies We use do not harm your device.
+Why We use cookies. Generally, cookies and other tracking technologies help Us to recognize Your device and track Your activities, thereby allowing Us to improve Our Website, adapt it to Your interests and needs as well as ensure Your security.
+When We use cookies. We use cookies and other tracking technologies only if You provide Your respective consent. Otherwise, in the absence of it, We will use strictly necessary cookies only (if they are used), because they are needed for the functioning of the Website. We will not be able to ensure that the Website is working for You without such cookies. The usage of strictly necessary cookies is based on Our legitimate interest in guaranteeing the smooth operation of the Website.
+Third-Party cookies. The Website is integrated with the services of the third-party suppliers in some cases. In such a scenario, the respective third parties may place their own cookies and other tracking technologies, which are governed by their relevant policies.
+How to delete cookies. If You wish to delete cookies, proceed as follows: open the settings or preferences in Your web browser, typically accessible via a menu in the top right corner. Navigate to the “Privacy” or “Security” section to find options to view and clear Your browsing data, including cookies. Choose the cookies You intend to delete and confirm Your selection to effectively remove them from Your computer. Please be aware that failure to provide Personal Data may result in the improper functioning of the Website.
+HOW WE SECURE YOUR DATA
+We apply security measures for Your data. We are committed to protecting the security of Your Personal Data. We use reasonable information security measures, including physical, administrative, and technical safeguards, including firewalls, antivirus and SSL encryption in order to protect Your Personal Data from: unauthorized access; improper use or disclosure; unauthorized modification or alteration; unlawful destruction or accidental loss.
+These measures vary based on the sensitivity of Personal Data that We collect, process, and store and the current state of technology.
+Parties receiving Your data from Us also secure it. Our partners, employees, contractors, and other third parties are obliged to keep Your Personal Data confidential when accessing it. Anyone who has such access is subject to strict contractual obligations regarding confidentiality and may be subject to disciplinary action if it does not fulfill these obligations. Also, We take care to ensure that parties, which receive Your Personal data from Us (regardless of where they are located at), have sufficient safeguards in place to properly process and protect Your Personal Data in line with Our own data protection and information security standards.
+We do Our best to prevent data leakage. We are constantly improving Our data security systems. We are doing everything in Our capacity to prevent its breach. In case such a breach occurs, We undertake to notify You and the regulators about the incident as quickly as possible, as well as to make every effort to minimize negative consequences.
+WHERE WE STORE YOUR DATA & TO WHERE WE TRANSFER IT
+Your data may be stored and processed worldwide. Personal Data We collect may be stored and processed for the purposes set out in the Policy in any country in which We operate. Besides, Your Personal Data may be transferred, stored, and processed by recipients in various countries around the world where Our servers are located, and Our databases are operated. We do all necessary to make sure all recipients understand the necessity to process Personal Data only on a legal basis considering any and all applicable legislation.
+Our servers’ location. Our servers are located in Dubai, the UAE, at Our legal address specified above.
+To whom We may transfer Your data. We do not sell Your Personal Data. We also do not allow any Personal Data to be used by third parties for their own marketing purposes, except in cases where You explicitly request or provide consent for Us to do so. However, We do need to share Personal Data to provide smooth Website operation to You. Below are the different scenarios under which We may share Your data with third parties.
+We may transfer Your Personal Data to the following third parties’ categories:
+any third party to whom We assign or novate any of Our rights or obligations under a relevant agreement;
+any national or international regulatory, enforcement, exchange body, central or local government department, and other statutory or public bodies or court where We are required to do so by applicable law or regulation at their request;
+any third parties, if You expressed Your consent to such transfer or transfer of Your Personal Data;
+third parties mentioned in clause 4.8. of the Policy.
+What happens if We’re going to transfer Your data overseas? One of the important steps We take when it comes to international data transfers involving third parties is due diligence and vetting.
+As part of the third-party vetting process, We ensure that Personal Data will only be transferred to a third party located outside the place of Our servers with the required cross-border transfer mechanism and safeguards in place as specified below. We consistently monitor changes to the international transfer mechanisms permitted under applicable privacy laws to ensure ongoing compliance with international data protection standards.
+When We engage a third party that is located outside the place of Our servers, We agree on the appropriate level of data protection, including additional contractual, technical, and organizational measures and the execution of a transfer impact assessment where necessary, to ensure the ongoing protection of the rights and freedoms of all individuals concerned by Our processing.
+We only transfer Your Personal Data to those third parties where We can be sure that We can protect Your privacy and Your rights, for example, the third party is located in a country that the EU (as a lead jurisdiction in privacy regulation matters) has deemed to have adequate data protection laws in place or to a country which has not been recognized by the European Commission as providing an adequate level of Personal Data protection but where We have a contract in place with that third party which includes the European Commission’s standard data protection clauses.
+Whenever We are sending data to countries that are not providing the same level of protection as European laws, i.e. to countries that have not been recognized by the European Commission as providing an adequate level of protection, We are going to use appropriate safeguards to protect Your Personal Data, including Standard Contractual Clauses for Processors for data transfers to processors, along with additional technical and organizational measures to ensure an equivalent level of protection.
+You consent to transfer Your data to countries with non-adequate protection. By using the Website, You authorize the transfer of Your Personal Data to countries that have not been recognized by the European Commission as providing an adequate level of Personal Data protection, where Our service providers process data for customer care, account management, and service provisioning, and to other locations where We and/or Our service providers operate, and to its (and their) storage and use as specified in the Policy and any applicable EULA or other agreement between You and Us.
