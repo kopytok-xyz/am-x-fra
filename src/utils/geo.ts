@@ -34,7 +34,7 @@ import axios from 'axios';
 
 // Функция для применения фильтра по региону на основе геолокации
 function applyRegionFilter(regionCode: string, countryName: string) {
-  console.log(`Пытаемся применить фильтр по региону: ${regionCode}, страна: ${countryName}`);
+  // console.log(`Пытаемся применить фильтр по региону: ${regionCode}, страна: ${countryName}`);
 
   // Получаем все доступные радио-кнопки фильтра по региону
   const regionFilters = document.querySelectorAll<HTMLInputElement>(
@@ -43,7 +43,7 @@ function applyRegionFilter(regionCode: string, countryName: string) {
 
   // Если нет фильтров, выходим
   if (regionFilters.length === 0) {
-    console.log('Не найдены фильтры по регионам');
+    // console.log('Не найдены фильтры по регионам');
     return;
   }
 
@@ -54,10 +54,10 @@ function applyRegionFilter(regionCode: string, countryName: string) {
     availableFilters.push({ value: filterValue.toLowerCase(), element: filter });
   });
 
-  console.log(
-    'Доступные фильтры:',
-    availableFilters.map((f) => f.value)
-  );
+  // console.log(
+  //   'Доступные фильтры:',
+  //   availableFilters.map((f) => f.value)
+  // );
 
   // Пытаемся найти подходящий фильтр на основе кода континента
   let matchedFilter: HTMLInputElement | null = null;
@@ -90,7 +90,7 @@ function applyRegionFilter(regionCode: string, countryName: string) {
     searchValues.push('europe', 'uk');
   }
 
-  console.log('Ищем соответствие для:', searchValues);
+  // console.log('Ищем соответствие для:', searchValues);
 
   // Пытаемся найти соответствие в три этапа:
   // 1. Точное совпадение
@@ -100,7 +100,7 @@ function applyRegionFilter(regionCode: string, countryName: string) {
     for (const { value, element } of availableFilters) {
       if (value === searchValue || value.includes(searchValue) || searchValue.includes(value)) {
         matchedFilter = element;
-        console.log(`Найдено соответствие: ${searchValue} -> ${value}`);
+        // console.log(`Найдено соответствие: ${searchValue} -> ${value}`);
         break;
       }
     }
@@ -112,9 +112,9 @@ function applyRegionFilter(regionCode: string, countryName: string) {
     matchedFilter =
       Array.from(regionFilters).find((filter) => filter.hasAttribute('is-it-default-location')) ||
       regionFilters[0]; // Если не найден, выбираем первый доступный
-    console.log(
-      `Не найдено точного соответствия, выбираем фильтр по умолчанию: ${matchedFilter.getAttribute('filter-by')}`
-    );
+    // console.log(
+    //   `Не найдено точного соответствия, выбираем фильтр по умолчанию: ${matchedFilter.getAttribute('filter-by')}`
+    // );
   }
 
   // Применяем выбранный фильтр
@@ -125,7 +125,7 @@ function applyRegionFilter(regionCode: string, countryName: string) {
     const changeEvent = new Event('change', { bubbles: true });
     matchedFilter.dispatchEvent(changeEvent);
 
-    console.log(`Применен фильтр по региону: ${matchedFilter.getAttribute('filter-by')}`);
+    // console.log(`Применен фильтр по региону: ${matchedFilter.getAttribute('filter-by')}`);
   }
 }
 
@@ -135,7 +135,7 @@ export const func_geo = async () => {
     const response = await axios.get('https://get.geojs.io/v1/ip/geo.json');
     const { city, country, continent_code } = response.data;
 
-    console.log('Получены данные геолокации:', { city, country, continent_code });
+    // console.log('Получены данные геолокации:', { city, country, continent_code });
 
     // Добавляем атрибуты к body для возможного использования в CSS или других скриптах
     document.body.setAttribute('data-city', city);
@@ -146,8 +146,8 @@ export const func_geo = async () => {
     setTimeout(() => {
       applyRegionFilter(continent_code, country);
     }, 1000);
-  } catch (error) {
-    console.error('Ошибка при получении геолокации:', error);
+  } catch {
+    // console.error('Ошибка при получении геолокации:', error);
   }
 };
 

@@ -91,7 +91,7 @@ function clearAllInputsOnScreen(screen: HTMLElement) {
   // Прямой вызов updateValidateButtonState удален, так как функция будет
   // вызвана автоматически через события change на чекбоксах
 
-  console.log(`Все инпуты на экране ${screen.getAttribute('screen-name')} были очищены`);
+  // console.log(`Все инпуты на экране ${screen.getAttribute('screen-name')} были очищены`);
 }
 
 // Функция для перенаправления клика с fake-кнопок на real-кнопки
@@ -103,17 +103,12 @@ function setupFakeButtonRedirection() {
     fakeButtons.forEach((fakeButton) => {
       fakeButton.addEventListener('click', (event) => {
         event.preventDefault();
-
-        // Программно вызываем клик на реальной кнопке
         (realButton as HTMLElement).click();
-
-        console.log('Клик перенаправлен с fake-кнопки на real-кнопку');
+        // console.log('Клик перенаправлен с fake-кнопки на real-кнопку');
       });
     });
 
-    console.log(
-      `Настроено перенаправление кликов с ${fakeButtons.length} fake-кнопок на real-кнопку`
-    );
+    // console.log(`Настроено перенаправление кликов с ${fakeButtons.length} fake-кнопок на real-кнопку`);
   }
 }
 
@@ -125,12 +120,9 @@ function setupRadioTriggerRedirection() {
     radioTriggers.forEach((trigger) => {
       trigger.addEventListener('click', (event) => {
         event.preventDefault();
-
-        // Получаем значение атрибута radio-trigger-redirect
         const targetValue = trigger.getAttribute('radio-trigger-redirect');
 
         if (targetValue) {
-          // Ищем радио-кнопку в форме с таким же значением value
           const formPopup = document.querySelector('[form-popup]');
           if (formPopup) {
             const targetRadio = formPopup.querySelector(
@@ -138,29 +130,24 @@ function setupRadioTriggerRedirection() {
             ) as HTMLInputElement;
 
             if (targetRadio) {
-              // Программно вызываем клик на найденной радио-кнопке
               targetRadio.click();
-              console.log(`Клик перенаправлен на радио-кнопку с value="${targetValue}"`);
+              // console.log(`Клик перенаправлен на радио-кнопку с value="${targetValue}"`);
 
-              // Если радио-кнопка находится внутри карточки с атрибутом card-checkbox-view,
-              // нужно также активировать карточку
               const parentCard = targetRadio.closest('[card-checkbox-view]');
               if (parentCard) {
                 parentCard.classList.add('is-checked');
               }
             } else {
-              console.log(`Не найдена радио-кнопка с value="${targetValue}" в форме`);
+              // console.log(`Не найдена радио-кнопка с value="${targetValue}" в форме`);
             }
           } else {
-            console.log('Не найдена форма [form-popup] на странице');
+            // console.log('Не найдена форма [form-popup] на странице');
           }
         }
       });
     });
 
-    console.log(
-      `Настроено перенаправление кликов с ${radioTriggers.length} элементов с атрибутом radio-trigger-redirect`
-    );
+    // console.log(`Настроено перенаправление кликов с ${radioTriggers.length} элементов с атрибутом radio-trigger-redirect`);
   }
 }
 
@@ -189,53 +176,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Добавляем обработчик клика на чекбокс
       checkboxInput.addEventListener('click', () => {
-        console.log(
-          `🔔 КЛИК ПО ЧЕКБОКСУ: ${checkboxInput.name || checkboxInput.id || 'безымянный чекбокс'}`
-        );
+        // console.log(`🔔 КЛИК ПО ЧЕКБОКСУ: ${checkboxInput.name || checkboxInput.id || 'безымянный чекбокс'}`);
       });
 
       // Добавляем обработчик изменения состояния чекбокса
       checkboxInput.addEventListener('change', () => {
-        // Обновляем атрибут checked-status при изменении состояния
         checkboxInput.setAttribute('checked-status', checkboxInput.checked ? 'true' : 'false');
-        console.log(
-          `Чекбокс ${checkboxInput.name || checkboxInput.id}: checked-status="${checkboxInput.getAttribute('checked-status')}"`
-        );
+        // console.log(`Чекбокс ${checkboxInput.name || checkboxInput.id}: checked-status="${checkboxInput.getAttribute('checked-status')}"`);
 
-        // Управляем классом wf-input-is-checked у родительского элемента
         if (checkboxInput.parentElement) {
           if (checkboxInput.checked) {
             checkboxInput.parentElement.classList.add('wf-input-is-checked');
-            console.log(
-              `Родитель чекбокса ${checkboxInput.name || checkboxInput.id} получил класс wf-input-is-checked`
-            );
+            // console.log(`Родитель чекбокса ${checkboxInput.name || checkboxInput.id} получил класс wf-input-is-checked`);
           } else {
             checkboxInput.parentElement.classList.remove('wf-input-is-checked');
-            console.log(
-              `Родитель чекбокса ${checkboxInput.name || checkboxInput.id} потерял класс wf-input-is-checked`
-            );
+            // console.log(`Родитель чекбокса ${checkboxInput.name || checkboxInput.id} потерял класс wf-input-is-checked`);
           }
         }
 
-        // Находим родительскую карточку и обновляем её класс
         const card = checkboxInput.closest('[card-checkbox-view]');
         if (card) {
           if (checkboxInput.checked) {
             card.classList.add('is-checked');
-            console.log(
-              `Карточка для чекбокса ${checkboxInput.name || checkboxInput.id} получила класс is-checked`
-            );
+            // console.log(`Карточка для чекбокса ${checkboxInput.name || checkboxInput.id} получила класс is-checked`);
           } else {
             card.classList.remove('is-checked');
-            console.log(
-              `Карточка для чекбокса ${checkboxInput.name || checkboxInput.id} потеряла класс is-checked`
-            );
+            // console.log(`Карточка для чекбокса ${checkboxInput.name || checkboxInput.id} потеряла класс is-checked`);
           }
         }
       });
     });
 
-    console.log(`Инициализирован атрибут checked-status для ${checkboxes.length} чекбоксов`);
+    // console.log(`Инициализирован атрибут checked-status для ${checkboxes.length} чекбоксов`);
 
     // Инициализируем радио-кнопки
     const radioButtons = document.querySelectorAll('input[type="radio"]');
@@ -250,26 +222,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Добавляем обработчик изменения состояния радио-кнопки
       radioInput.addEventListener('change', () => {
-        // Сначала снимаем класс со всех радио-кнопок той же группы
         document.querySelectorAll(`input[name="${radioInput.name}"]`).forEach((rb) => {
           if (rb.parentElement) {
             rb.parentElement.classList.remove('wf-input-is-checked');
           }
         });
 
-        // Затем добавляем класс родителю выбранной радио-кнопки
         if (radioInput.checked && radioInput.parentElement) {
           radioInput.parentElement.classList.add('wf-input-is-checked');
-          console.log(
-            `Родитель радио-кнопки ${radioInput.name || radioInput.id} получил класс wf-input-is-checked`
-          );
+          // console.log(
+          //   `Родитель радио-кнопки ${radioInput.name || radioInput.id} получил класс wf-input-is-checked`
+          // );
         }
       });
     });
 
-    console.log(
-      `Настроено управление классом wf-input-is-checked для ${radioButtons.length} радио-кнопок`
-    );
+    // console.log(
+    //   `Настроено управление классом wf-input-is-checked для ${radioButtons.length} радио-кнопок`
+    // );
   }
 
   // Вызываем функцию инициализации атрибута checked-status
@@ -277,55 +247,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Функция для фильтрации карточек [card-to-filter]
   function setupCardFiltering() {
-    // Находим все карточки для фильтрации
     const cardsToFilter = document.querySelectorAll<HTMLElement>('[card-to-filter]');
-
-    // Находим контейнер с видимым состоянием и пустым состоянием
     const visibleStateContainer = document.querySelector<HTMLElement>('[filter-visible-state]');
     const emptyStateContainer = document.querySelector<HTMLElement>('[filter-empty-state]');
-
-    // Находим кнопку сброса фильтров
     const clearFiltersButton = document.querySelector<HTMLElement>('[clear-filters-button]');
-
-    // Находим индикатор активных фильтров для мобильных устройств
     const mobileFilterActiveIndicator = document.querySelector<HTMLElement>(
       '[mobile-filter-active-indicator]'
     );
 
-    // Проверяем, есть ли элементы для фильтрации
     if (cardsToFilter.length === 0) {
-      console.log('Не найдены карточки с атрибутом [card-to-filter]');
+      // console.log('Не найдены карточки с атрибутом [card-to-filter]');
       return;
     }
 
-    // Проверяем наличие контейнеров состояний
     if (!visibleStateContainer) {
-      console.log('Не найден контейнер с атрибутом [filter-visible-state]');
+      // console.log('Не найден контейнер с атрибутом [filter-visible-state]');
     }
 
     if (!emptyStateContainer) {
-      console.log('Не найден контейнер с атрибутом [filter-empty-state]');
+      // console.log('Не найден контейнер с атрибутом [filter-empty-state]');
     }
 
     if (!mobileFilterActiveIndicator) {
-      console.log('Не найден индикатор с атрибутом [mobile-filter-active-indicator]');
+      // console.log('Не найден индикатор с атрибутом [mobile-filter-active-indicator]');
     }
 
-    // Объект для хранения активных фильтров для каждого типа
     const activeFilters: Record<string, string> = {
       'partner-type': 'all',
       branch: 'all',
       location: 'all',
     };
 
-    // Находим все радио-кнопки с атрибутом filter-by
     const filterTriggers = document.querySelectorAll<HTMLInputElement>(
       'input[type="radio"][filter-by]'
     );
 
-    console.log(
-      `Найдено ${cardsToFilter.length} карточек и ${filterTriggers.length} триггеров фильтрации`
-    );
+    // console.log(`Найдено ${cardsToFilter.length} карточек и ${filterTriggers.length} триггеров фильтрации`);
 
     // Функция для обновления лейбла в дропдауне
     function updateFilterLabel(inputElement: HTMLInputElement) {
@@ -333,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const filterByName = inputElement.getAttribute('filter-by-name');
 
       if (!filterByName) {
-        console.log('Атрибут filter-by-name не найден у:', inputElement);
+        // console.log('Атрибут filter-by-name не найден у:', inputElement);
         return;
       }
 
@@ -345,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const dropdownFilterAttr = dropdownTrigger?.getAttribute('dropdown-filter');
 
       if (!dropdownTrigger || !dropdownFilterAttr) {
-        console.log('Не удалось найти выпадающее меню для:', inputElement);
+        // console.log('Не удалось найти выпадающее меню для:', inputElement);
         return;
       }
 
@@ -354,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (currentLabel) {
         currentLabel.textContent = filterByName;
-        console.log(`Обновлен текст в dropdown-filter (${dropdownFilterAttr}): ${filterByName}`);
+        // console.log(`Обновлен текст в dropdown-filter (${dropdownFilterAttr}): ${filterByName}`);
       }
     }
 
@@ -380,19 +337,19 @@ document.addEventListener('DOMContentLoaded', () => {
       if (hasActiveCircleTrigger) {
         // Если есть активная радио-кнопка (не "all"), показываем индикатор
         mobileFilterActiveIndicator.classList.remove('hide');
-        console.log('Индикатор активных фильтров показан (активен filter-circle-trigger не all)');
+        // console.log('Индикатор активных фильтров показан (активен filter-circle-trigger не all)');
       } else {
         // Если нет активных радио-кнопок или выбраны только "all", скрываем индикатор
         mobileFilterActiveIndicator.classList.add('hide');
-        console.log(
-          'Индикатор активных фильтров скрыт (нет активных filter-circle-trigger или выбран all)'
-        );
+        // console.log(
+        //   'Индикатор активных фильтров скрыт (нет активных filter-circle-trigger или выбран all)'
+        // );
       }
     }
 
     // Функция для применения всех активных фильтров
     function applyAllFilters() {
-      console.log('Применяем фильтры:', activeFilters);
+      // console.log('Применяем фильтры:', activeFilters);
 
       let visibleCount = 0;
 
@@ -443,11 +400,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      console.log(`Видимых карточек после фильтрации: ${visibleCount} из ${cardsToFilter.length}`);
+      // console.log(`Видимых карточек после фильтрации: ${visibleCount} из ${cardsToFilter.length}`);
 
       // Отображаем пустое состояние, если нет видимых карточек
       if (visibleCount === 0) {
-        console.warn('Нет карточек, соответствующих выбранным фильтрам');
+        // console.warn('Нет карточек, соответствующих выбранным фильтрам');
 
         // Показываем пустое состояние и скрываем основное состояние
         if (emptyStateContainer) {
@@ -474,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Функция для сброса фильтров
     function clearFilters() {
-      console.log('Сбрасываем все фильтры');
+      // console.log('Сбрасываем все фильтры');
 
       // Находим все радио-кнопки с атрибутом filter-can-be-clear
       const clearableFilters = document.querySelectorAll<HTMLInputElement>(
@@ -546,11 +503,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const filterBy = triggerInput.getAttribute('filter-by');
 
       if (!filterBy) {
-        console.log('Не найден атрибут filter-by у триггера', triggerInput);
+        // console.log('Не найден атрибут filter-by у триггера', triggerInput);
         return;
       }
 
-      console.log(`Настраиваю триггер: инпут=${triggerInput.name}, filter-by=${filterBy}`);
+      // console.log(`Настраиваю триггер: инпут=${triggerInput.name}, filter-by=${filterBy}`);
 
       // Проверяем изначально выбранные фильтры и обновляем метки
       if (triggerInput.checked) {
@@ -573,7 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (filterType) {
             // Обновляем активный фильтр
             activeFilters[filterType] = filterBy;
-            console.log(`Фильтр ${filterType} установлен в ${filterBy}`);
+            // console.log(`Фильтр ${filterType} установлен в ${filterBy}`);
 
             // Применяем все активные фильтры
             applyAllFilters();
@@ -638,14 +595,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Если нашли значение, устанавливаем его в value элемента
         if (sourceValue) {
           inputElement.value = sourceValue;
-          console.log(
-            `Заменено пустое значение value для элемента с id="${inputElement.id}" на "${sourceValue}" из родительского атрибута`
-          );
+          // console.log(
+          //   `Заменено пустое значение value для элемента с id="${inputElement.id}" на "${sourceValue}" из родительского атрибута`
+          // );
         } else {
-          console.log(
-            `Не найден родитель с атрибутом need-top-replace-with-js-src для элемента:`,
-            inputElement
-          );
+          // console.log(
+          //   `Не найден родитель с атрибутом need-top-replace-with-js-src для элемента:`,
+          //   inputElement
+          // );
         }
       }
     });
@@ -855,7 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Это позволит корректно работать с кнопкой Back при повторном открытии формы
       entryScreenNames.length = 0;
       entryScreenNames.push('start');
-      console.log('Сброшен список точек входа в форму');
+      // console.log('Сброшен список точек входа в форму');
 
       // Через 300мс добавляем класс hide и разблокируем скролл
       setTimeout(() => {
@@ -878,9 +835,9 @@ document.addEventListener('DOMContentLoaded', () => {
         entryScreenNames.includes(currentScreenName) || currentScreenName === 'start';
       backButton.classList.toggle('hide-opacity', shouldHide);
 
-      console.log(
-        `Кнопка Back ${shouldHide ? 'скрыта' : 'показана'} на экране ${currentScreenName}`
-      );
+      // console.log(
+      //   `Кнопка Back ${shouldHide ? 'скрыта' : 'показана'} на экране ${currentScreenName}`
+      // );
     }
   }
 
@@ -899,9 +856,9 @@ document.addEventListener('DOMContentLoaded', () => {
         bottomNav.classList.add('hide');
       }
 
-      console.log(
-        `Нижняя навигация ${isChoosePartnerScreen ? 'показана' : 'скрыта'} на экране ${currentScreen.getAttribute('screen-name')}`
-      );
+      // console.log(
+      //   `Нижняя навигация ${isChoosePartnerScreen ? 'показана' : 'скрыта'} на экране ${currentScreen.getAttribute('screen-name')}`
+      // );
     }
   }
 
@@ -919,7 +876,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formElement = document.querySelector('form');
     if (!formElement) return;
 
-    console.log('--- Текущие значения всех инпутов формы ---');
+    // console.log('--- Текущие значения всех инпутов формы ---');
 
     // Получаем данные из FormData для обычных инпутов
     const formData = new FormData(formElement);
@@ -965,8 +922,8 @@ document.addEventListener('DOMContentLoaded', () => {
         : 'Не выбран';
     });
 
-    console.table(inputValues); // Выводим в виде таблицы для лучшей читаемости
-    console.log('--- Конец списка значений инпутов ---');
+    // console.table(inputValues); // Выводим в виде таблицы для лучшей читаемости
+    // console.log('--- Конец списка значений инпутов ---');
   }
 
   // Функция для обновления скрытого инпута с историей шагов
@@ -988,7 +945,7 @@ document.addEventListener('DOMContentLoaded', () => {
     stepHistoryInput.type = 'hidden';
     stepHistoryInput.name = 'step-history';
     formElement.appendChild(stepHistoryInput);
-    console.log('Создан скрытый инпут для истории шагов: name="step-history"');
+    // console.log('Создан скрытый инпут для истории шагов: name="step-history"');
 
     // Отслеживаем изменения в любом инпуте формы
     formElement.addEventListener('input', () => {
@@ -1028,265 +985,188 @@ document.addEventListener('DOMContentLoaded', () => {
   if (formElement) {
     formElement.addEventListener('submit', () => {
       // Логируем содержимое всех инпутов перед отправкой
-      console.log('--- Содержимое инпутов перед отправкой формы ---');
+      // console.log('--- Содержимое инпутов перед отправкой формы ---');
       const formData = new FormData(formElement);
-      formData.forEach((value, key) => {
-        console.log(`${key}: ${value}`);
+      formData.forEach(() => {
+        // console.log(`${key}: ${value}`);
       });
-      console.log('--- Конец содержимого инпутов ---');
+      // console.log('--- Конец содержимого инпутов ---');
     });
 
     // Функция для обработки успешной отправки формы
     function handleFormSuccess() {
-      console.log('Форма успешно отправлена, активируем сброс');
+      // console.log('Форма успешно отправлена, активируем сброс');
 
-      // Ищем элемент анимации сброса, который должен быть кликнут моментально
       const resetAnimationElement = document.querySelector('[form-reset-animation]');
       if (resetAnimationElement) {
-        console.log('Найден элемент для анимации сброса, кликаем моментально');
+        // console.log('Найден элемент для анимации сброса, кликаем моментально');
         try {
           (resetAnimationElement as HTMLElement).click();
-          console.log('Клик по элементу анимации сброса выполнен');
-        } catch (error) {
-          console.error('Ошибка при клике по элементу анимации сброса:', error);
+          // console.log('Клик по элементу анимации сброса выполнен');
+        } catch {
+          // console.error('Ошибка при клике по элементу анимации сброса:', error);
         }
       } else {
-        console.log('Элемент [form-reset-animation] не найден');
+        // console.log('Элемент [form-reset-animation] не найден');
       }
 
-      // Отложенный клик по элементу сброса через 5 секунд
-      setTimeout(() => {
-        // Ищем элемент сброса
-        const resetElement = document.querySelector('[fs-formsubmit-element="reset"]');
-        console.log('Элемент сброса найден?', !!resetElement);
+      // Ищем элемент сброса формы
+      const resetElement = document.querySelector('[fs-formsubmit-element="reset"]');
+      // console.log('Элемент сброса найден?', !!resetElement);
 
-        if (resetElement) {
-          // Кликаем по элементу сброса
-          console.log('Пытаемся кликнуть по элементу сброса через 5 секунд:', resetElement);
+      if (resetElement) {
+        // console.log('Пытаемся кликнуть по элементу сброса через 5 секунд:', resetElement);
+        setTimeout(() => {
           try {
             (resetElement as HTMLElement).click();
-            console.log('Клик по элементу сброса выполнен');
-          } catch (error) {
-            console.error('Ошибка при клике по элементу сброса:', error);
+            // console.log('Клик по элементу сброса выполнен');
+          } catch {
+            // console.error('Ошибка при клике по элементу сброса:', error);
           }
-        } else {
-          console.log('Элемент сброса [fs-formsubmit-element="reset"] не найден');
-          console.log('Попробуем найти элемент через другие селекторы...');
+        }, 5000);
+      } else {
+        // console.log('Элемент сброса [fs-formsubmit-element="reset"] не найден');
+        // console.log('Попробуем найти элемент через другие селекторы...');
 
-          // Проверяем альтернативные селекторы
-          const alternativeResetElement = document.querySelector(
-            '.w-form-done button, .form-success button, [form-reset]'
-          );
-          if (alternativeResetElement) {
-            console.log('Найден альтернативный элемент сброса:', alternativeResetElement);
+        // Пробуем найти через другие селекторы
+        const alternativeResetElement = document.querySelector(
+          '[fs-formsubmit-element="reset"], [fs-formsubmit-element], [fs-formsubmit]'
+        );
+
+        if (alternativeResetElement) {
+          // console.log('Найден альтернативный элемент сброса:', alternativeResetElement);
+          setTimeout(() => {
             (alternativeResetElement as HTMLElement).click();
-          } else {
-            console.log('Альтернативный элемент сброса также не найден');
-          }
+          }, 5000);
+        } else {
+          // console.log('Альтернативный элемент сброса также не найден');
         }
+      }
 
-        // В любом случае через 5 секунд закрываем форму
-        // Но перед закрытием формы принудительно выполняем сброс всех полей
-        console.log('Закрываем форму через 5 секунд после успешной отправки');
-
-        // Перед закрытием формы принудительно сбрасываем все поля на всех экранах
-        const allScreens = document.querySelectorAll('[screen-name]');
-        console.log(`Найдено ${allScreens.length} экранов для сброса полей`);
-
-        allScreens.forEach((screen) => {
-          console.log(
-            `Сбрасываем поля на экране: ${(screen as HTMLElement).getAttribute('screen-name')}`
-          );
-          clearAllInputsOnScreen(screen as HTMLElement);
-        });
-
-        // Также сбрасываем все формы целиком (для надежности)
-        const forms = document.querySelectorAll('form');
-        forms.forEach((form) => {
-          console.log('Сбрасываем форму:', form);
-          form.reset();
-        });
-
-        // Принудительно сбрасываем класс wf-input-is-checked у всех родительских элементов
-        const checkedParents = document.querySelectorAll('.wf-input-is-checked');
-        checkedParents.forEach((parent) => {
-          parent.classList.remove('wf-input-is-checked');
-          console.log('Удален класс wf-input-is-checked у элемента:', parent);
-        });
-
-        // Принудительно сбрасываем класс is-checked у всех элементов с card-checkbox-view
-        const checkedCards = document.querySelectorAll('[card-checkbox-view].is-checked');
-        checkedCards.forEach((card) => {
-          card.classList.remove('is-checked');
-          console.log('Удален класс is-checked у карточки:', card);
-        });
-
-        // После полного сброса закрываем форму и переходим на начальный экран
-        // Получаем первый экран чтобы перейти к нему
-        const firstScreen = document.querySelector('[screen-name="start"]');
-        if (firstScreen) {
-          console.log('Переходим на стартовый экран');
-          // Скрываем все экраны
-          const allScreenElems = document.querySelectorAll('[screen-name]');
-          allScreenElems.forEach((screen) => {
-            screen.classList.add('hide');
-          });
-          // Показываем первый экран
-          firstScreen.classList.remove('hide');
-          // Обновляем статус кнопки Back
-          updateBackButtonVisibility();
-        }
-
-        // Закрываем форму
+      // console.log('Закрываем форму через 5 секунд после успешной отправки');
+      setTimeout(() => {
         closeForm();
       }, 5000);
+
+      // Находим все экраны для сброса полей
+      const allScreens = document.querySelectorAll<HTMLElement>('[screen-name]');
+      // console.log(`Найдено ${allScreens.length} экранов для сброса полей`);
+
+      // Очищаем поля на всех экранах
+      allScreens.forEach((screen) => {
+        clearAllInputsOnScreen(screen);
+      });
+
+      // Сбрасываем все формы
+      document.querySelectorAll('form').forEach((form) => {
+        // console.log('Сбрасываем форму:', form);
+        form.reset();
+
+        // Удаляем класс wf-input-is-checked у всех родителей чекбоксов и радио-кнопок
+        const checkedParents = form.querySelectorAll('.wf-input-is-checked');
+        checkedParents.forEach((parent) => {
+          parent.classList.remove('wf-input-is-checked');
+          // console.log('Удален класс wf-input-is-checked у элемента:', parent);
+        });
+
+        // Удаляем класс is-checked у всех карточек
+        const checkedCards = form.querySelectorAll('.is-checked');
+        checkedCards.forEach((card) => {
+          card.classList.remove('is-checked');
+          // console.log('Удален класс is-checked у карточки:', card);
+        });
+      });
+
+      // Переходим на стартовый экран
+      const startScreen = document.querySelector<HTMLElement>('[screen-name="start"]');
+      if (startScreen) {
+        // console.log('Переходим на стартовый экран');
+        const currentScreen = document.querySelector<HTMLElement>('[screen-name]:not(.hide)');
+        if (currentScreen) {
+          switchScreen(currentScreen, startScreen);
+        }
+      }
     }
 
-    // Устанавливаем глобальный обработчик XHR для перехвата успешных запросов к API Webflow
+    // Перехватываем XHR запросы для обнаружения успешных отправок форм
     const originalXHROpen = XMLHttpRequest.prototype.open;
-    const originalXHRSend = XMLHttpRequest.prototype.send;
-
     XMLHttpRequest.prototype.open = function (method, url, ...args) {
-      // Сохраняем URL запроса для дальнейшей проверки
-      this._webflowFormUrl = url;
-      return originalXHROpen.apply(this, [method, url, ...args]);
+      if (typeof url === 'string' && url.includes('webflow.com/api/v1/form')) {
+        this.addEventListener('load', function () {
+          if (this.status === 200) {
+            // console.log('Перехвачен успешный запрос к Webflow API форм:', url);
+            // console.log('Статус ответа:', this.status);
+            // console.log('Ответ:', this.responseText);
+            handleFormSuccess();
+          }
+        });
+      }
+      return originalXHROpen.call(this, method, url, ...args);
     };
 
-    XMLHttpRequest.prototype.send = function (data) {
-      // Оригинальный обработчик события load
-      const originalOnLoad = this.onload;
-
-      // Свой обработчик события load
-      this.onload = function (e) {
-        // Проверяем, относится ли запрос к API форм Webflow
-        const url = this._webflowFormUrl || '';
-        if (
-          (url.includes('/api/v1/form/') || url.includes('webflow.com/api/v1/form/')) &&
-          this.status === 200
-        ) {
-          console.log('Перехвачен успешный запрос к Webflow API форм:', url);
-          console.log('Статус ответа:', this.status);
-          console.log('Ответ:', this.responseText);
-
-          // Вызываем обработчик успешной отправки формы
-          setTimeout(handleFormSuccess, 500); // Небольшая задержка, чтобы DOM успел обновиться
-        }
-
-        // Вызываем оригинальный обработчик, если он существует
-        if (typeof originalOnLoad === 'function') {
-          originalOnLoad.call(this, e);
-        }
-      };
-
-      return originalXHRSend.apply(this, arguments);
-    };
-
-    console.log('Установлен перехватчик XHR для обнаружения успешных отправок форм Webflow');
+    // console.log('Установлен перехватчик XHR для обнаружения успешных отправок форм Webflow');
 
     // Для Fetch API также добавляем перехватчик
     const originalFetch = window.fetch;
-    window.fetch = function (input, init) {
-      return originalFetch(input, init).then((response) => {
-        // Проверяем, относится ли запрос к API форм Webflow
-        const url = typeof input === 'string' ? input : input instanceof Request ? input.url : '';
-        if (
-          (url.includes('/api/v1/form/') || url.includes('webflow.com/api/v1/form/')) &&
-          response.status === 200
-        ) {
-          console.log('Перехвачен успешный fetch-запрос к Webflow API форм:', url);
-          console.log('Статус ответа:', response.status);
+    window.fetch = async function (input, init) {
+      const response = await originalFetch.call(this, input, init);
+      const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
 
-          // Клонируем ответ, так как response.json() может быть выполнен только один раз
-          const clonedResponse = response.clone();
-          clonedResponse
-            .json()
-            .then((data) => {
-              console.log('Ответ:', data);
-
-              // Вызываем обработчик успешной отправки формы
-              setTimeout(handleFormSuccess, 500); // Небольшая задержка, чтобы DOM успел обновиться
-            })
-            .catch((err) => {
-              console.error('Ошибка при чтении JSON из ответа:', err);
-            });
+      if (typeof url === 'string' && url.includes('webflow.com/api/v1/form')) {
+        const isOk = Boolean(response?.ok);
+        if (isOk) {
+          // console.log('Перехвачен успешный fetch-запрос к Webflow API форм:', url);
+          // console.log('Статус ответа:', response.status);
+          handleFormSuccess();
         }
-        return response;
-      });
+      }
+
+      return response;
     };
 
-    console.log('Установлен перехватчик fetch для обнаружения успешных отправок форм Webflow');
+    // console.log('Установлен перехватчик fetch для обнаружения успешных отправок форм Webflow');
 
-    // Используем все предыдущие методы тоже, для надежности
-
-    // 1. Стандартное событие formSubmitSuccess
-    window.addEventListener('formSubmitSuccess', (event) => {
-      console.log('Получено событие formSubmitSuccess', event);
-      const targetForm = event.target as HTMLElement;
-      if (targetForm && targetForm.closest('form') === formElement) {
-        handleFormSuccess();
-      }
+    // Также слушаем событие formSubmitSuccess
+    document.addEventListener('formSubmitSuccess', () => {
+      // console.log('Получено событие formSubmitSuccess', event);
+      handleFormSuccess();
     });
 
-    // 2. Для Webflow также можно использовать наблюдение за появлением элемента .w-form-done
-    const formContainer = formElement.closest('.w-form');
-    if (formContainer) {
-      // Создаем наблюдатель за DOM
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'childList' && mutation.addedNodes.length) {
-            // Проверяем, был ли добавлен элемент успешной отправки
-            mutation.addedNodes.forEach((node) => {
-              if (node.nodeType === 1) {
-                const element = node as HTMLElement;
-                if (
-                  element.classList &&
-                  (element.classList.contains('w-form-done') ||
-                    element.classList.contains('form-success') ||
-                    element.classList.contains('w-form-success'))
-                ) {
-                  console.log('Обнаружено добавление элемента успешной отправки:', element);
-                  handleFormSuccess();
-                }
-              }
-            });
-          } else if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            // Проверяем изменение класса на существующих элементах
-            const target = mutation.target as HTMLElement;
+    // Наблюдаем за добавлением элементов успешной отправки в DOM
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof HTMLElement) {
+            const element = node as HTMLElement;
             if (
-              target.classList &&
-              (target.classList.contains('w-form-done') ||
-                target.classList.contains('form-success') ||
-                target.classList.contains('w-form-success')) &&
-              !target.classList.contains('hide')
+              element.matches('[fs-formsubmit-element="success"]') ||
+              element.matches('[fs-formsubmit-element="success-message"]') ||
+              element.matches('[fs-formsubmit-success]')
             ) {
-              console.log(
-                'Обнаружено отображение элемента успешной отправки через изменение класса:',
-                target
-              );
+              // console.log('Обнаружено добавление элемента успешной отправки:', element);
               handleFormSuccess();
             }
           }
         });
       });
+    });
 
-      // Настраиваем наблюдатель для отслеживания изменений DOM и атрибутов
-      observer.observe(formContainer, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['class', 'style'],
-      });
+    // Начинаем наблюдение за всем документом
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    });
 
-      console.log('Настроено расширенное наблюдение за элементами успешной отправки формы');
+    // console.log('Настроено расширенное наблюдение за элементами успешной отправки формы');
 
-      // Также проверяем видимые элементы успеха сразу
-      const successElements = formContainer.querySelectorAll(
-        '.w-form-done:not(.hide), .form-success:not(.hide), .w-form-success:not(.hide)'
-      );
-      if (successElements.length > 0) {
-        console.log('Найдены уже отображенные элементы успешной отправки:', successElements);
-        handleFormSuccess();
-      }
+    // Также проверяем видимые элементы успеха сразу
+    const successElements = document.querySelectorAll(
+      '[fs-formsubmit-element="success"], [fs-formsubmit-element="success-message"], [fs-formsubmit-success]'
+    );
+
+    if (successElements.length > 0) {
+      // console.log('Найдены уже отображенные элементы успешной отправки:', successElements);
+      handleFormSuccess();
     }
   }
 
@@ -1309,7 +1189,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // Добавляем этот экран в список точек входа, если его там еще нет
           if (entryScreenName && !entryScreenNames.includes(entryScreenName)) {
             entryScreenNames.push(entryScreenName);
-            console.log(`Экран "${entryScreenName}" добавлен как точка входа`);
+            // console.log(`Экран "${entryScreenName}" добавлен как точка входа`);
           }
 
           // Очищаем историю переходов при открытии формы
